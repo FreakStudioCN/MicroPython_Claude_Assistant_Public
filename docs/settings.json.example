@@ -1,0 +1,89 @@
+{
+  "_comment_zh": "手动安装样例：不走 plugin 时使用。把 <ABSOLUTE_PROJECT_PATH> 替换为本仓库在你机器上的绝对路径（如 G:/MicroPython_Claude_Assistant 或 /home/user/MicroPython_Claude_Assistant）。仅含 hooks，不包含 env/permissions/marketplaces 等用户偏好。",
+  "_comment_en": "Manual install example: use this when not installing via the Claude Code plugin. Replace <ABSOLUTE_PROJECT_PATH> with the repo path on your machine. Hooks only; does not include env/permissions/marketplaces.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pythonw \"<ABSOLUTE_PROJECT_PATH>/daemon/hook_bridge.py\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pythonw \"<ABSOLUTE_PROJECT_PATH>/daemon/hook_bridge.py\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pythonw \"<ABSOLUTE_PROJECT_PATH>/daemon/hook_bridge.py\""
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pythonw \"<ABSOLUTE_PROJECT_PATH>/daemon/hook_bridge.py\""
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pythonw \"<ABSOLUTE_PROJECT_PATH>/daemon/hook_bridge.py\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"<ABSOLUTE_PROJECT_PATH>/daemon/hook_bridge.py\""
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"<ABSOLUTE_PROJECT_PATH>/daemon/hook_bridge.py\""
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"<ABSOLUTE_PROJECT_PATH>/daemon/hook_bridge.py\""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "name": "create-character",
+  "owner": "leezisheng",
+  "repo": "MicroPython_Claude_Assistant",
+  "path": ".claude/skills/create-character",
+  "branch": "main",
+  "source": "manual"
+}

@@ -1,0 +1,84 @@
+{                                                                                                                                                                                    
+   "env": {
+      "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+    },
+    "includeCoAuthoredBy": false,
+    "permissions": {
+      "defaultMode": "plan"
+    },
+    "skipDangerousModePermissionPrompt": true,
+    "hasCompletedOnboarding": true,
+    "extraKnownMarketplaces": {
+      "understand-anything": {
+        "source": {
+          "source": "github",
+          "repo": "Lum1104/Understand-Anything"
+        }
+      }
+    },
+    "hooks": {
+      "UserPromptSubmit": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "pythonw \"G:/MicroPython_Claude_Assistant/daemon/hook_bridge.py\""
+            }
+          ]
+        }
+      ],
+      "PreToolUse": [
+        {
+          "matcher": "*",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "pythonw \"G:/MicroPython_Claude_Assistant/daemon/hook_bridge.py\""
+            }
+          ]
+        }
+      ],
+      "PostToolUse": [
+        {
+          "matcher": "*",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "pythonw \"G:/MicroPython_Claude_Assistant/daemon/hook_bridge.py\""
+            }
+          ]
+        }
+      ],
+      "PostToolUseFailure": [
+        {
+          "matcher": "*",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "pythonw \"G:/MicroPython_Claude_Assistant/daemon/hook_bridge.py\""
+            }
+          ]
+        }
+      ],
+      "Notification": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "pythonw \"G:/MicroPython_Claude_Assistant/daemon/hook_bridge.py\""
+            }
+          ]
+        }
+      ],
+      "Stop": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "python \"G:/MicroPython_Claude_Assistant/daemon/hook_bridge.py\""
+            }
+          ]
+        }
+      ]
+    }
+  }
