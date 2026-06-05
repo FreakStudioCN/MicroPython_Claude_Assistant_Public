@@ -26,8 +26,8 @@
 
 **可定制**：面板角色（8 种预设 + 自定义）、语音音色（200+ 豆包音色）均可通过 `config.py` 一行配置切换。
 
-[![演示文稿](https://img.shields.io/badge/📊_演示文稿-GitHub_Pages-00d4ff?style=for-the-badge)](https://freakstudiocn.github.io/MicroPython_Claude_Assistant/presentation.html)
-[![备用链接](https://img.shields.io/badge/备用-htmlpreview-555555?style=for-the-badge)](https://htmlpreview.github.io/?https://github.com/FreakStudioCN/MicroPython_Claude_Assistant/blob/main/presentation.html)
+[![演示文稿](https://img.shields.io/badge/📊_演示文稿-GitHub_Pages-00d4ff?style=for-the-badge)](https://freakstudiocn.github.io/MicroPython_Claude_Assistant_Public/presentation.html)
+[![备用链接](https://img.shields.io/badge/备用-htmlpreview-555555?style=for-the-badge)](https://htmlpreview.github.io/?https://github.com/FreakStudioCN/MicroPython_Claude_Assistant_Public/blob/main/presentation.html)
 
 | clock 闹钟版 | panel 面板版 |
 |:---:|:---:|

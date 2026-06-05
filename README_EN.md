@@ -26,8 +26,8 @@ Real-time visualization of Claude Code tool execution status as an ESP32 desktop
 
 **Customizable**: Panel characters (8 presets + custom), voice timbres (200+ Doubao options) — switch via `config.py`.
 
-[![Presentation](https://img.shields.io/badge/📊_Presentation-GitHub_Pages-00d4ff?style=for-the-badge)](https://freakstudiocn.github.io/MicroPython_Claude_Assistant/presentation_EN.html)
-[![Mirror](https://img.shields.io/badge/mirror-htmlpreview-555555?style=for-the-badge)](https://htmlpreview.github.io/?https://github.com/FreakStudioCN/MicroPython_Claude_Assistant/blob/main/presentation_EN.html)
+[![Presentation](https://img.shields.io/badge/📊_Presentation-GitHub_Pages-00d4ff?style=for-the-badge)](https://freakstudiocn.github.io/MicroPython_Claude_Assistant_Public/presentation_EN.html)
+[![Mirror](https://img.shields.io/badge/mirror-htmlpreview-555555?style=for-the-badge)](https://htmlpreview.github.io/?https://github.com/FreakStudioCN/MicroPython_Claude_Assistant_Public/blob/main/presentation_EN.html)
 
 | Clock Edition | Panel Edition |
 |:---:|:---:|
