@@ -3,7 +3,13 @@ name: claude-buddy-setup
 description: Set up the Claude Buddy hardware desktop pet — installs runtime, pairs BLE device, registers CLI hooks. Use when user asks to install/configure/update/repair/diagnose/uninstall Claude Buddy / 装/配/修/卸载 桌宠/Claude Buddy 硬件.
 ---
 
+> [🇨🇳 中文](skill.md) · [🇬🇧 English](skill_EN.md)
+
 # Claude Buddy 装机 Skill
+
+> **v0.10.0 更新：推荐使用 GUI 工具装机。**  
+> 下载 `Claude_Assistant_Setup.exe`（或 `python -m setup_tool`），按 [setup_tool_guide.md](setup_tool_guide.md) 的 25 步图文教程完成固件烧录 + BLE 配对。  
+> 以下命令行流程适用于**无 GUI 环境或脚本自动化**。
 
 你正在帮用户装 Claude Buddy 硬件桌宠。**所有阶段都在用户机器上执行——不要 fork agent，不要 WebFetch，直接用 Bash 和 AskUserQuestion**。
 
