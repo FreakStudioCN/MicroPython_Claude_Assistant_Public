@@ -12,3 +12,6 @@ scripts/sim_device/logs/
 dist/
 build/
 *.spec
+
+# GUI 烧录工具（Releases 发布，不进入仓库）
+Claude_Assistant_Setup.exe
