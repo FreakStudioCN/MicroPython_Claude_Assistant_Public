@@ -7,7 +7,7 @@ description: Set up the Claude Buddy hardware desktop pet — installs runtime, 
 
 # Claude Buddy Setup Skill
 
-> **v0.10.0 Update: GUI tool is now the recommended way to install.**  
+> **v0.11.0 Update: GUI tool is now the recommended way to install.**  
 > Download `Claude_Assistant_Setup.exe` (or run `python -m setup_tool`) and follow the 25-step visual guide at [setup_tool_guide_EN.md](setup_tool_guide_EN.md) to complete flashing + BLE pairing.  
 > The CLI flow below is for **headless environments or script automation**.
 

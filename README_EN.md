@@ -193,6 +193,7 @@ Re-flash: run setup_tool to re-flash.
 
 | Version | Date | Description |
 |---------|------|-------------|
+| v0.11.0 | 2026-06-07 | EXE cross-computer compatibility refactor + version system |
 | v0.10.1 | 2026-06-05 | Bilingual documentation + 25-step visual setup guide + GUI tool improvements |
 | v0.10.0 | 2026-05-30 | GUI flashing tool + panel voice completion + character creation Skill |
 | v0.9.0 | 2026-05-18 | MVP: dual hardware forms + LED/voice feature complete |
