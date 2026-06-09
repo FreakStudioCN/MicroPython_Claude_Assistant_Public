@@ -56,9 +56,19 @@ Both forms share the same firmware code, differentiated by the `VARIANT` field i
 
 > **Recommended: Install as Claude Code Plugin** (auto-registers hooks, no manual config)
 >
+> **Online install** (requires GitHub access):
 > ```bash
 > claude plugin install claude-buddy
 > ```
+>
+> **Offline install** (no proxy):
+> Clone the plugin repo and open it in Claude Code — the project's `hooks/hooks.json` is auto-detected:
+> ```bash
+> git clone https://github.com/FreakStudioCN/claude-buddy-plugin
+> cd claude-buddy-plugin
+> claude .
+> ```
+> Full plugin source at [github.com/FreakStudioCN/claude-buddy-plugin](https://github.com/FreakStudioCN/claude-buddy-plugin).
 >
 > After plugin install, hooks work automatically.
 
@@ -193,6 +203,7 @@ Re-flash: run setup_tool to re-flash.
 
 | Version | Date | Description |
 |---------|------|-------------|
+| v0.12.0 | 2026-06-08 | Clock vibration sensor/motor + global brightness control |
 | v0.11.0 | 2026-06-07 | EXE cross-computer compatibility refactor + version system |
 | v0.10.1 | 2026-06-05 | Bilingual documentation + 25-step visual setup guide + GUI tool improvements |
 | v0.10.0 | 2026-05-30 | GUI flashing tool + panel voice completion + character creation Skill |

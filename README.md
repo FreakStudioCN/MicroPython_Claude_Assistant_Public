@@ -56,9 +56,19 @@
 
 > **推荐：以 Claude Code Plugin 方式安装**（自动注册 hook，无需手动改配置）
 >
+> **在线安装**（需要代理访问 GitHub）：
 > ```bash
 > claude plugin install claude-buddy
 > ```
+>
+> **离线安装**（无代理用户）：
+> 克隆插件仓库到本地，在 Claude Code 中打开该目录，项目自带的 `hooks/hooks.json` 会被自动加载：
+> ```bash
+> git clone https://github.com/FreakStudioCN/claude-buddy-plugin
+> cd claude-buddy-plugin
+> claude .
+> ```
+> 插件仓库的完整文件见 [github.com/FreakStudioCN/claude-buddy-plugin](https://github.com/FreakStudioCN/claude-buddy-plugin)。
 >
 > Plugin 安装后 hook 自动生效。
 
@@ -193,6 +203,7 @@ VOICE_IDLE_MAX_S    = 60    # 空闲偶发播报最长间隔（秒）
 
 | 版本 | 日期 | 内容 |
 |------|------|------|
+| v0.12.0 | 2026-06-08 | 闹钟版振动传感器/马达 + 全局亮度控制 |
 | v0.11.0 | 2026-06-07 | EXE 跨电脑兼容性重构 + 版本号系统 |
 | v0.10.1 | 2026-06-05 | 双语文档体系 + 25 步图文装机指南 + GUI 烧录工具优化 |
 | v0.10.0 | 2026-05-30 | GUI 烧录工具 + 面板语音补齐 + 角色创建 Skill |

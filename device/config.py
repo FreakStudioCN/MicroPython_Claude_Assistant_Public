@@ -88,6 +88,12 @@ CLOCK_SPK_DIN      = 7   # I2S 数据输入
 CLOCK_AMP_GAIN_PIN = 6   # 增益控制
 CLOCK_AMP_SD_PIN   = 5   # 关断 / 静音控制
 
+# ── 振动传感器与马达（闹钟版）───────────────────────────────
+CLOCK_VIB_SENSOR_PIN = 10  # 振动传感器（外部中断触发）
+CLOCK_VIB_MOTOR_PIN  = 20  # 振动马达（输出）
+VIB_SENSOR_ENABLE    = True  # 拍击检测开关（GPIO10 → 触发语音）
+VIB_MOTOR_ENABLE     = True  # 振动马达开关（GPIO20 → 状态反馈）
+
 # ============================================================
 # 语音配置（闹钟版）
 # ============================================================
@@ -116,6 +122,7 @@ LIGHT_RAINBOW_FRAMES    = 60   # 启动彩虹动画帧数
 LIGHT_CONNECT_FRAMES    = 30   # 连接白闪帧数
 LIGHT_DISCONNECT_FRAMES = 30   # 断线淡出帧数
 LIGHT_CONNECT_BRIGHTNESS = 80  # 连接白闪亮度
+LIGHT_BRIGHTNESS        = 80   # 全局亮度系数（1-100）
 
 LIGHT_IDLE_PERIOD   = 30   # 空闲呼吸 sin 周期（帧）
 LIGHT_IDLE_MAX_V    = 40   # 空闲蓝色最大亮度
