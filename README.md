@@ -56,19 +56,19 @@
 
 > **推荐：以 Claude Code Plugin 方式安装**（自动注册 hook，无需手动改配置）
 >
-> **在线安装**（需要代理访问 GitHub）：
+> **在线安装**（需要访问 GitHub）：
 > ```bash
-> claude plugin install claude-buddy
+> claude plugin marketplace add https://github.com/ChrisWu132/claude-buddy-plugin.git
+> claude plugin install claude-buddy-bridge@claude-buddy
 > ```
 >
-> **离线安装**（无代理用户）：
-> 克隆插件仓库到本地，在 Claude Code 中打开该目录，项目自带的 `hooks/hooks.json` 会被自动加载：
+> **离线安装**（无网络/无法访问 GitHub 的用户）：
+> 克隆公开仓库到本地，在 Claude Code 中打开该目录，命令 Claude Code 读取 `skill.md` 和 `plugin_plan/PLAN.md` 进行安装：
 > ```bash
-> git clone https://github.com/FreakStudioCN/claude-buddy-plugin
-> cd claude-buddy-plugin
+> git clone https://github.com/FreakStudioCN/MicroPython_Claude_Assistant_Public
+> cd MicroPython_Claude_Assistant_Public
 > claude .
 > ```
-> 插件仓库的完整文件见 [github.com/FreakStudioCN/claude-buddy-plugin](https://github.com/FreakStudioCN/claude-buddy-plugin)。
 >
 > Plugin 安装后 hook 自动生效。
 

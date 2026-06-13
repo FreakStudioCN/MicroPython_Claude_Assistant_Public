@@ -58,17 +58,17 @@ Both forms share the same firmware code, differentiated by the `VARIANT` field i
 >
 > **Online install** (requires GitHub access):
 > ```bash
-> claude plugin install claude-buddy
+> claude plugin marketplace add https://github.com/ChrisWu132/claude-buddy-plugin.git
+> claude plugin install claude-buddy-bridge@claude-buddy
 > ```
 >
-> **Offline install** (no proxy):
-> Clone the plugin repo and open it in Claude Code — the project's `hooks/hooks.json` is auto-detected:
+> **Offline install** (no network / GitHub inaccessible):
+> Clone the public repo and open it in Claude Code, then ask Claude Code to read `skill.md` and `plugin_plan/PLAN.md` for installation:
 > ```bash
-> git clone https://github.com/FreakStudioCN/claude-buddy-plugin
-> cd claude-buddy-plugin
+> git clone https://github.com/FreakStudioCN/MicroPython_Claude_Assistant_Public
+> cd MicroPython_Claude_Assistant_Public
 > claude .
 > ```
-> Full plugin source at [github.com/FreakStudioCN/claude-buddy-plugin](https://github.com/FreakStudioCN/claude-buddy-plugin).
 >
 > After plugin install, hooks work automatically.
 
