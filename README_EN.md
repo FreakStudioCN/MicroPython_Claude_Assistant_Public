@@ -20,9 +20,10 @@ At its heart, it's a simple idea: most of the time you're coding, you don't need
 
 Real-time visualization of Claude Code tool execution status as an ESP32 desktop pet — BLE-pushed states translated into LED glow, voice announcements, and screen animations.
 
-**Two hardware forms**:
+**Three hardware forms**:
+- **D-Shell Panel (ESP32-S3)**: 2.4-inch TFT screen + GT911 touch + LVGL animation + WS2812×8 rainbow LED strip + TTS voice, 8 preset characters, multi-session history (**official hardware**)
+- **Panel (ESP32-S3)**: 2.4-inch TFT screen + LVGL animation + TTS voice, 8 preset characters, multi-session history (Waveshare dev board)
 - **Clock (ESP32-C3)**: WS2812B dual LEDs + Doubao TTS voice, colors change with state
-- **Panel (ESP32-S3)**: 2.4-inch TFT screen + LVGL animation + TTS voice, 8 preset characters, multi-session history
 
 **Customizable**: Panel characters (8 presets + custom), voice timbres (200+ Doubao options) — switch via `config.py`.
 
@@ -45,10 +46,11 @@ Real-time visualization of Claude Code tool execution status as an ESP32 desktop
 
 | Form | MCU | Output | Features |
 |------|-----|--------|----------|
-| **Panel** (Status Display) | ESP32-S3 | ST7789 2.4" + LVGL + MAX98357A speaker | Character animation + TTS voice + multi-session history |
+| **D-Shell** (D-Shell Panel) | ESP32-S3 | ST7789 2.4" + GT911 touch + LVGL + WS2812×8 + MAX98357A speaker | Character animation + touch + TTS voice + multi-session history + rainbow LED strip |
+| **Panel** (Status Display) | ESP32-S3 | ST7789 2.4" + CST816S touch + LVGL + MAX98357A speaker | Character animation + touch + TTS voice + multi-session history (Waveshare dev board) |
 | **Clock** (Alert Light) | ESP32-C3 | WS2812×2 + MAX98357A speaker | LED state + TTS voice |
 
-Both forms share the same firmware code, differentiated by the `VARIANT` field in `config.py`.
+All three forms share the same firmware code, differentiated by the `VARIANT` field in `config.py`.
 
 ---
 

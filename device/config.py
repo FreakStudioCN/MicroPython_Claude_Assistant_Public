@@ -1,12 +1,13 @@
 # ============================================================
 # config.py —— 硬件引脚与全局常量配置
 #
-# 面板版：ESP32-S3 触摸屏（ST7789 + CST816S，320×240 横屏）
-# 闹钟版：ESP32-C3（WS2812 双灯 + MAX98357A 功放）
+# D-Shell 正式面板版：ESP32-S3（ST7789 + GT911 触摸 + WS2812×8 灯带）
+# Panel 开发版面版：ESP32-S3（ST7789 + CST816S 触摸，320×240 横屏）
+# Clock 闹钟版：ESP32-C3（WS2812 双灯 + MAX98357A 功放）
 # ============================================================
 
 # ── 设备型号（烧录时由 flash_device.py 注入）─────────────────
-VARIANT = "panel"  # "panel" | "clock"
+VARIANT = "panel"  # "panel" | "dshell" | "clock"
 
 # ── 面板角色（可选值见 device/char_*.py）─────────────────────
 # claude / cat / robot / ghost / among_us / creeper / kirby / pikachu
@@ -72,6 +73,54 @@ PANEL_SD_MOSI    = 38
 PANEL_SD_SCLK    = 39
 PANEL_SD_MISO    = 40
 PANEL_SD_CS      = 41
+
+# ============================================================
+# D-Shell 面板版（ESP32-S3，第二面板硬件）
+# ============================================================
+
+# ── 显示屏（ST7789，SPI1）───────────────────────────────────
+DSHELL_LCD_WIDTH  = 240
+DSHELL_LCD_HEIGHT = 320
+DSHELL_SCREEN_W   = 320
+DSHELL_SCREEN_H   = 240
+DSHELL_SPI_HOST   = 1
+DSHELL_SPI_FREQ   = 40_000_000
+DSHELL_LCD_SCK    = 39
+DSHELL_LCD_MOSI   = 38
+DSHELL_LCD_MISO   = -1     # 未连接
+DSHELL_LCD_DC     = 45
+DSHELL_LCD_CS     = 48
+DSHELL_LCD_RST    = 40
+DSHELL_LCD_BL     = 47
+DSHELL_FB_SIZE    = 28800
+
+# ── 触摸屏（GT911，I2C0）────────────────────────────────────
+DSHELL_I2C_HOST   = 0
+DSHELL_I2C_FREQ   = 100_000
+DSHELL_TP_RST     = 1
+DSHELL_TP_INT     = 2
+DSHELL_TP_SCL     = 41
+DSHELL_TP_SDA     = 42
+DSHELL_TP_ADDR    = 0x5D
+DSHELL_TP_REGBITS = 16
+
+# ── 扬声器 MAX98357A（I2S1，D-Shell）─────────────────────────
+DSHELL_SPK_SCK      = 17
+DSHELL_SPK_WS       = 18
+DSHELL_SPK_SD       = 16
+DSHELL_AMP_SD_PIN   = 15
+DSHELL_AMP_GAIN_PIN = 8
+
+# ── WS2812（D-Shell 自带灯带）────────────────────────────────
+DSHELL_LED_PIN   = 46
+DSHELL_LED_COUNT = 8
+
+# ── 按键（D-Shell）───────────────────────────────────────────
+DSHELL_KEY_UP   = 9
+DSHELL_KEY_DOWN = 3
+
+# ── 蜂鸣器（D-Shell）─────────────────────────────────────────
+DSHELL_BEEP_PIN = 5
 
 # ============================================================
 # 不带屏幕版（闹钟版）引脚
@@ -145,11 +194,67 @@ MAX_SESSIONS        = 5
 HISTORY_MAX_LEN     = 20
 BLINK_INTERVAL_S    = 0.4
 
-# ── 语音引脚别名（voice_task.py 统一使用，两版本共用）────────
-SPK_BCLK   = PANEL_SPK_SCK    if VARIANT == "panel" else CLOCK_SPK_BCLK
-SPK_LRC    = PANEL_SPK_WS     if VARIANT == "panel" else CLOCK_SPK_LRC
-SPK_DIN    = PANEL_SPK_SD     if VARIANT == "panel" else CLOCK_SPK_DIN
-AMP_SD_PIN = PANEL_AMP_SD_PIN if VARIANT == "panel" else CLOCK_AMP_SD_PIN
+# ── 引脚别名（display_renderer.py / voice_task.py / main.py 统一使用）─
+#   通过 VARIANT 自动选择对应硬件平台的引脚定义
+if VARIANT == "dshell":
+    # ── 显示 ──
+    SPI_BUS   = DSHELL_SPI_HOST
+    SPI_FREQ  = DSHELL_SPI_FREQ
+    LCD_SCLK  = DSHELL_LCD_SCK
+    LCD_MOSI  = DSHELL_LCD_MOSI
+    LCD_MISO  = DSHELL_LCD_MISO
+    LCD_DC    = DSHELL_LCD_DC
+    LCD_CS    = DSHELL_LCD_CS
+    LCD_BL    = DSHELL_LCD_BL
+    LCD_WIDTH = DSHELL_LCD_WIDTH
+    LCD_HEIGHT = DSHELL_LCD_HEIGHT
+    SCREEN_W  = DSHELL_SCREEN_W
+    SCREEN_H  = DSHELL_SCREEN_H
+    FB_SIZE   = DSHELL_FB_SIZE
+    # ── 触摸 ──
+    I2C_BUS    = DSHELL_I2C_HOST
+    I2C_FREQ   = DSHELL_I2C_FREQ
+    TP_SCL     = DSHELL_TP_SCL
+    TP_SDA     = DSHELL_TP_SDA
+    TP_ADDR    = DSHELL_TP_ADDR
+    TP_REGBITS = DSHELL_TP_REGBITS
+    # ── 扬声器 ──
+    SPK_BCLK   = DSHELL_SPK_SCK
+    SPK_LRC    = DSHELL_SPK_WS
+    SPK_DIN    = DSHELL_SPK_SD
+    AMP_SD_PIN = DSHELL_AMP_SD_PIN
+    # ── SD 卡（D-Shell 暂不支持）─
+    PANEL_SD_CS = -1
+elif VARIANT == "panel":
+    SPI_BUS    = 2
+    SPI_FREQ   = 40_000_000
+    LCD_SCLK   = 39
+    LCD_MOSI   = 38
+    LCD_MISO   = 40
+    LCD_DC     = 42
+    LCD_CS     = 45
+    LCD_BL     = 1
+    LCD_WIDTH  = 240
+    LCD_HEIGHT = 320
+    SCREEN_W   = 320
+    SCREEN_H   = 240
+    FB_SIZE    = 28800
+    I2C_BUS    = 0
+    I2C_FREQ   = 400_000
+    TP_SDA     = 48
+    TP_SCL     = 47
+    TP_ADDR    = 0x15
+    TP_REGBITS = 8
+    SPK_BCLK   = PANEL_SPK_SCK
+    SPK_LRC    = PANEL_SPK_WS
+    SPK_DIN    = PANEL_SPK_SD
+    AMP_SD_PIN = PANEL_AMP_SD_PIN
+    # SD 卡引脚已在 PANEL_SD_* 中定义
+else:  # clock
+    SPK_BCLK   = CLOCK_SPK_BCLK
+    SPK_LRC    = CLOCK_SPK_LRC
+    SPK_DIN    = CLOCK_SPK_DIN
+    AMP_SD_PIN = CLOCK_AMP_SD_PIN
 
 # ── 日志配置 ──────────────────────────────────────────────────
 LOG_ENABLE  = True       # True = 写文件；False = 走串口

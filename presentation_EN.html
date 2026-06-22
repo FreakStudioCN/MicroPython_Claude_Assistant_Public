@@ -109,7 +109,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   <div class="stl stag show d1">Codex Buddy · Claude Buddy</div>
   <h1 class="main-title stag show d2">Bring your code<br>to life</h1>
   <p class="sub-title stag show d3">Real-time Claude Code execution status as desktop LED glow Real-time Claude Code status as desktop LED glow Real-time Claude Code execution status as desktop LED glow & voice voice voice</p>
-  <div class="ver-badge stag show d4">v0.12.0 · Production Ready · 2026-06-08</div>
+  <div class="ver-badge stag show d4">v1.0.0 · Production Ready · 2026-06-23</div>
   <div class="tags stag show d5">
     <span class="tag cx">ESP32</span>
     <span class="tag gx">MicroPython</span>
@@ -432,8 +432,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 <!-- ══ S9: HARDWARE ══ -->
 <section class="slide" id="s9">
   <div class="stl stag d1">Hardware Specs</div>
-  <h2 class="hl stag d2" style="font-size:clamp(18px,2.8vw,38px);text-align:center;margin-bottom:14px">Two Forms <span class="cx">Hardware Specs</span></h2>
-  <div class="g2 stag d3" style="max-width:1160px;align-items:start;gap:20px">
+  <h2 class="hl stag d2" style="font-size:clamp(18px,2.8vw,38px);text-align:center;margin-bottom:14px">Three Forms <span class="cx">Hardware Specs</span></h2>
+  <div class="g3 stag d3" style="max-width:1160px;align-items:start;gap:20px">
     <div style="background:rgba(255,255,255,.02);border:1px solid rgba(0,245,255,.22);border-radius:13px;padding:22px" onmouseover="this.style.boxShadow='0 0 20px rgba(0,245,255,.3)'" onmouseout="this.style.boxShadow=''">
       <div style="font:9px/1 'Courier New',monospace;letter-spacing:3px;color:var(--cyan);margin-bottom:10px">PANEL FORM · ESP32-S3</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
@@ -446,6 +446,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
         <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px"><span class="dim">Touch</span><span style="font-family:'Courier New',monospace;color:var(--cyan)">CST816S I2C</span></div>
         <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px"><span class="dim">UI Framework</span><span style="font-family:'Courier New',monospace;color:var(--cyan)">LVGL</span></div>
         <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:12px"><span class="dim">Character</span><span style="font-family:'Courier New',monospace;color:var(--cyan)">CAT / ROBOT / DUCK</span></div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,.02);border:1px solid rgba(0,255,136,.22);border-radius:13px;padding:22px" onmouseover="this.style.boxShadow='0 0 20px rgba(0,255,136,.3)'" onmouseout="this.style.boxShadow=''">
+      <div style="font:9px/1 'Courier New',monospace;letter-spacing:3px;color:var(--green);margin-bottom:10px">DSHELL FORM · ESP32-S3</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+        <div class="photo" style="height:110px"></div>
+        <div class="photo" style="height:110px"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px"><span class="dim">Chip</span><span style="font-family:'Courier New',monospace;color:var(--green)">ESP32-S3</span></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px"><span class="dim">Display</span><span style="font-family:'Courier New',monospace;color:var(--green)">ST7789 2.4" 320×240</span></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px"><span class="dim">Touch</span><span style="font-family:'Courier New',monospace;color:var(--green)">GT911 I2C</span></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px"><span class="dim">LED Strip</span><span style="font-family:'Courier New',monospace;color:var(--green)">WS2812×8 Rainbow</span></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px"><span class="dim">UI Framework</span><span style="font-family:'Courier New',monospace;color:var(--green)">LVGL</span></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:12px"><span class="dim">Characters</span><span style="font-family:'Courier New',monospace;color:var(--green)">CAT / ROBOT / DUCK</span></div>
       </div>
     </div>
     <div style="background:rgba(255,255,255,.02);border:1px solid rgba(139,92,246,.22);border-radius:13px;padding:22px" onmouseover="this.style.boxShadow='0 0 20px rgba(139,92,246,.3)'" onmouseout="this.style.boxShadow=''">
@@ -479,7 +494,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <div class="metric"><div class="metric-n" style="color:var(--purple);text-shadow:var(--gpurple)">v6</div><div class="metric-l">Protocol Version</div></div>
     <div class="metric"><div class="metric-n" data-t="10" data-s="">10</div><div class="metric-l">Hook EventsTypes</div></div>
     <div class="metric"><div class="metric-n" style="color:var(--green);text-shadow:var(--ggreen)">+slot</div><div class="metric-l">v5→v6 New Field</div></div>
-    <div class="metric"><div class="metric-n" data-t="2">2</div><div class="metric-l">Hardware Forms</div></div>
+    <div class="metric"><div class="metric-n" data-t="3">3</div><div class="metric-l">Hardware Forms</div></div>
   </div>
   <div class="stag d5" style="max-width:1160px;margin-top:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
     <div style="background:rgba(0,245,255,.04);border:1px solid rgba(0,245,255,.1);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--dim);line-height:1.6">
@@ -504,7 +519,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
       <span style="color:var(--purple);font-weight:600">+slot Field</span> — Solves slot drift at its root: stable session identity, no more guess-by-order.
     </div>
     <div style="background:rgba(139,92,246,.04);border:1px solid rgba(139,92,246,.1);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--dim);line-height:1.6">
-      <span style="color:var(--purple);font-weight:600">2 Hardware Forms</span> — Clock (LED+voice) for a glance; Panel (screen+history) for deep multitasking.
+      <span style="color:var(--purple);font-weight:600">3 Hardware Forms</span> — D-Shell official panel (screen+touch+LED strip); Panel dev board (screen+history) for deep multitasking; Clock (LED+voice) for a glance.
     </div>
     <div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--dim);line-height:1.6">
       <span style="color:var(--green);font-weight:600">Daemon 634 lines</span> — Clean state machine, easy to extend or customize the protocol.
@@ -801,6 +816,22 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <div class="card g">
       <div style="color:var(--green);font-size:13px;letter-spacing:2px;margin-bottom:8px">🔆 Global Brightness</div>
       <div style="color:var(--dim);font-size:13px;line-height:1.7">LIGHT_BRIGHTNESS 1-100<br>LIGHT_CONNECT_BRIGHTNESS separate<br>GUI brightness slider<br>test_worker.py config override tests</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s15a">
+  <div class="stl stag d1">v1.0.0 · 2026-06-23</div>
+  <div class="hl stag d2" style="text-align:center">D-Shell Official Panel + <span class="cx">Three-Form Release</span></div>
+  <div class="sep stag d2"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;width:100%;margin-top:12px" class="stag d3">
+    <div class="card">
+      <div style="color:var(--cyan);font-size:13px;letter-spacing:2px;margin-bottom:8px">🖥️ D-Shell Official Panel Hardware</div>
+      <div style="color:var(--dim);font-size:13px;line-height:1.7">ESP32-S3 + ST7789V 2.4" display<br>GT911 touch + WS2812×8 rainbow LED strip<br>Official panel hardware, st7789v driver<br>Built-in rainbow flow LED ISR animation</div>
+    </div>
+    <div class="card g">
+      <div style="color:var(--green);font-size:13px;letter-spacing:2px;margin-bottom:8px">📋 Three Forms + Documentation</div>
+      <div style="color:var(--dim);font-size:13px;line-height:1.7">GUI: D-Shell option (screen+char+LED strip)<br>Version bumped to v1.0.0 (first formal release)<br>All docs updated to three hardware forms<br>LED strip simplified to rainbow flow, sync fixed</div>
     </div>
   </div>
 </section>

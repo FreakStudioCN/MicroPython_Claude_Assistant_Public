@@ -2,7 +2,7 @@
 
 > [🇨🇳 中文](setup_tool_guide.md) · [🇬🇧 English](setup_tool_guide_EN.md)
 
-本指南按步骤截图展示一键烧录配置工具（`Claude_Assistant_Setup.exe` 或 `python -m setup_tool`）的完整操作流程。25 张截图覆盖从启动到日志诊断的全过程，含 **Clock（ESP32-C3 灯光语音）** 和 **Panel（ESP32-S3 屏幕动画）** 两条分叉路径。
+本指南按步骤截图展示一键烧录配置工具（`Claude_Assistant_Setup.exe` 或 `python -m setup_tool`）的完整操作流程。25 张截图覆盖从启动到日志诊断的全过程，含 **D-Shell（ESP32-S3 正式面板，触摸屏+灯带）**、**Panel（ESP32-S3 开发板，屏幕动画）** 和 **Clock（ESP32-C3 灯光语音）** 三条分叉路径。
 
 ---
 
@@ -74,19 +74,22 @@ Claude Buddy 烧录配置工具主界面，分 5 大配置步骤：①选代码 
 
 ---
 
-## 第 9 步：步骤② — Panel 硬件选型（屏幕 + 角色动画）
+## 第 9 步：步骤② — 屏幕版硬件选型（Panel / D-Shell）
 
 ![exe9](docs/exe9.png)
 
-单选 **Panel (ESP32-S3)**：屏幕 + 动画模式，适配带 LCD 显示屏的 S3 开发板。切换后界面新增「面板角色」下拉选项，可用像素角色动画。
+屏幕版有两个选项，均适配 ESP32-S3 带 LCD 显示屏机型：
+
+- **D-Shell (ESP32-S3)  屏幕+角色+灯带**：正式面板硬件，GT911 触摸屏 + WS2812×8 彩虹灯带，切换后同样可选面板角色。
+- **Panel (ESP32-S3)  屏幕+动画**：Waveshare 开发板，CST816S 触摸屏。切换后界面新增「面板角色」下拉选项，可用像素角色动画。
 
 ---
 
-## 第 10 步：Panel 内置角色列表
+## 第 10 步：屏幕版内置角色列表
 
 ![exe10](docs/exe10.png)
 
-点开「面板角色」下拉框，内置 8 个预设角色：`claude`、`cat`、`robot`、`ghost`、`among_us`、`creeper`、`kirby`、`pikachu`。选中后烧录即可在屏幕显示对应动画。
+点开「面板角色」下拉框（Panel / D-Shell 均可使用），内置 8 个预设角色：`claude`、`cat`、`robot`、`ghost`、`among_us`、`creeper`、`kirby`、`pikachu`。选中后烧录即可在屏幕显示对应动画。
 
 ---
 
@@ -127,8 +130,9 @@ Claude Buddy 烧录配置工具主界面，分 5 大配置步骤：①选代码 
 ![exe15](docs/exe15.png)
 
 固件下拉框根据硬件选型自动匹配：
-- 选 **S3** → `claude-buddy-panel-waveshare-esp32s3-2inch-v0.9.bin`（2 寸屏固件）
-- 选 **C3** → C3 无屏固件
+- 选 **D-Shell (S3 正式面板)** → `claude-buddy-dshell-esp32s3-v0.9.bin`（GT911 触摸 + 灯带固件）
+- 选 **Panel (S3 开发板)** → `claude-buddy-panel-waveshare-esp32s3-2inch-v0.9.bin`（CST816S 触摸固件）
+- 选 **Clock (C3)** → C3 无屏固件
 
 固件存储在系统临时缓存目录，无需手动下载。
 

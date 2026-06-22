@@ -2,7 +2,7 @@
 
 > [🇨🇳 中文](setup_tool_guide.md) · [🇬🇧 English](setup_tool_guide_EN.md)
 
-This guide walks through the one-click flashing tool (`Claude_Assistant_Setup.exe` or `python -m setup_tool`) step by step with 25 screenshots — from launch to log diagnostics, covering both **Clock (ESP32-C3, LED + Voice)** and **Panel (ESP32-S3, Display + Animation)** paths.
+This guide walks through the one-click flashing tool (`Claude_Assistant_Setup.exe` or `python -m setup_tool`) step by step with 25 screenshots — from launch to log diagnostics, covering **D-Shell (ESP32-S3, official panel with touch+LED strip)**, **Panel (ESP32-S3 dev board, display+animation)**, and **Clock (ESP32-C3, LED+voice)** — three branching paths.
 
 ---
 
@@ -74,19 +74,22 @@ After generation completes, click **Save**. The save dialog defaults to the `dev
 
 ---
 
-## Step 9: Step ② — Panel Hardware Selection (Screen + Character Animation)
+## Step 9: Step ② — Screen Hardware Selection (Panel / D-Shell)
 
 ![exe9](docs/exe9.png)
 
-Select **Panel (ESP32-S3)**: Screen + Animation mode for LCD-equipped S3 boards. A "Panel Character" dropdown appears with pixel art character animations.
+Two screen variants for ESP32-S3 boards with LCD display:
+
+- **D-Shell (ESP32-S3)  Screen+Character+LED Strip**: Official panel hardware, GT911 touch + WS2812×8 rainbow LED strip. Character selection also available.
+- **Panel (ESP32-S3)  Screen+Animation**: Waveshare dev board, CST816S touch. A "Panel Character" dropdown appears with pixel art character animations.
 
 ---
 
-## Step 10: Built-in Panel Characters
+## Step 10: Built-in Screen Characters
 
 ![exe10](docs/exe10.png)
 
-Open the "Panel Character" dropdown to see 8 preset characters: `claude`, `cat`, `robot`, `ghost`, `among_us`, `creeper`, `kirby`, `pikachu`. Select one and flash to see the animation on screen.
+Open the "Panel Character" dropdown (available for both Panel and D-Shell) to see 8 preset characters: `claude`, `cat`, `robot`, `ghost`, `among_us`, `creeper`, `kirby`, `pikachu`. Select one and flash to see the animation on screen.
 
 ---
 
@@ -127,8 +130,9 @@ Click **Preview Custom Character** to view the ghost character's multi-color pix
 ![exe15](docs/exe15.png)
 
 The firmware dropdown auto-matches based on hardware selection:
-- **S3 selected** → `claude-buddy-panel-waveshare-esp32s3-2inch-v0.9.bin` (2-inch screen firmware)
-- **C3 selected** → C3 firmware (no screen)
+- **D-Shell (S3 official panel)** → `claude-buddy-dshell-esp32s3-v0.9.bin` (GT911 touch + LED strip firmware)
+- **Panel (S3 dev board)** → `claude-buddy-panel-waveshare-esp32s3-2inch-v0.9.bin` (CST816S touch firmware)
+- **Clock (C3)** → C3 firmware (no screen)
 
 Firmware is stored in the system temp cache directory — no manual download needed.
 
