@@ -118,6 +118,29 @@ pip install -e .
 >
 > GUI 工具会自动扫描串口、匹配固件文件、检查依赖，无需手动执行 CLI 步骤。
 
+### 手动注册 Hook（Plugin 安装失败时的备选方案）
+
+如果 `claude plugin install` 不可用，手动注册 hook：
+
+打开 `~/.claude/settings.json`（Windows：`C:\Users\<用户名>\.claude\settings.json`），添加以下 `hooks` 段（合并到已有配置中），将 `<你的项目路径>` 替换为实际绝对路径：
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": "pythonw \"<你的项目路径>/daemon/hook_bridge.py\""}]}],
+    "PreToolUse": [{"matcher": "*", "hooks": [{"type": "command", "command": "pythonw \"<你的项目路径>/daemon/hook_bridge.py\""}]}],
+    "PostToolUse": [{"matcher": "*", "hooks": [{"type": "command", "command": "pythonw \"<你的项目路径>/daemon/hook_bridge.py\""}]}],
+    "PostToolUseFailure": [{"matcher": "*", "hooks": [{"type": "command", "command": "pythonw \"<你的项目路径>/daemon/hook_bridge.py\""}]}],
+    "Notification": [{"hooks": [{"type": "command", "command": "pythonw \"<你的项目路径>/daemon/hook_bridge.py\""}]}],
+    "Stop": [{"hooks": [{"type": "command", "command": "python \"<你的项目路径>/daemon/hook_bridge.py\""}]}],
+    "StopFailure": [{"hooks": [{"type": "command", "command": "python \"<你的项目路径>/daemon/hook_bridge.py\""}]}],
+    "SessionEnd": [{"hooks": [{"type": "command", "command": "python \"<你的项目路径>/daemon/hook_bridge.py\""}]}]
+  }
+}
+```
+
+修改后**重启 Claude Code** 生效。
+
 ### 启动守护进程
 
 ```bash

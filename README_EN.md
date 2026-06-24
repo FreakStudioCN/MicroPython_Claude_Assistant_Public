@@ -118,6 +118,29 @@ Run `dist/Claude_Assistant_Setup.exe` (download from Releases page).
 >
 > GUI tool auto-scans COM ports, matches firmware files, checks dependencies — no need to manually run CLI steps.
 
+### Manual Hook Registration (fallback if Plugin install fails)
+
+If `claude plugin install` is unavailable, manually register hooks:
+
+Open `~/.claude/settings.json` (Windows: `C:\Users\<user>\.claude\settings.json`) and add the following `hooks` block (merge into existing config), replacing `<your-project-path>` with the actual absolute path:
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": "pythonw \"<your-project-path>/daemon/hook_bridge.py\""}]}],
+    "PreToolUse": [{"matcher": "*", "hooks": [{"type": "command", "command": "pythonw \"<your-project-path>/daemon/hook_bridge.py\""}]}],
+    "PostToolUse": [{"matcher": "*", "hooks": [{"type": "command", "command": "pythonw \"<your-project-path>/daemon/hook_bridge.py\""}]}],
+    "PostToolUseFailure": [{"matcher": "*", "hooks": [{"type": "command", "command": "pythonw \"<your-project-path>/daemon/hook_bridge.py\""}]}],
+    "Notification": [{"hooks": [{"type": "command", "command": "pythonw \"<your-project-path>/daemon/hook_bridge.py\""}]}],
+    "Stop": [{"hooks": [{"type": "command", "command": "python \"<your-project-path>/daemon/hook_bridge.py\""}]}],
+    "StopFailure": [{"hooks": [{"type": "command", "command": "python \"<your-project-path>/daemon/hook_bridge.py\""}]}],
+    "SessionEnd": [{"hooks": [{"type": "command", "command": "python \"<your-project-path>/daemon/hook_bridge.py\""}]}]
+  }
+}
+```
+
+**Restart Claude Code** after saving.
+
 ### Start the Daemon
 
 ```bash
