@@ -2,7 +2,7 @@
 
 > [🇨🇳 中文](setup_tool_guide.md) · [🇬🇧 English](setup_tool_guide_EN.md)
 
-This guide walks through the one-click flashing tool (`Claude_Assistant_Setup.exe` or `python -m setup_tool`) step by step with 25 screenshots — from launch to log diagnostics, covering **D-Shell (ESP32-S3, official panel with touch+LED strip)**, **Panel (ESP32-S3 dev board, display+animation)**, and **Clock (ESP32-C3, LED+voice)** — three branching paths.
+This guide walks through the one-click flashing tool (`Claude_Assistant_Setup.exe` or `python -m setup_tool`) step by step with screenshots — from launch to bridge diagnostics, covering **D-Shell (ESP32-S3, official panel with touch+LED strip)**, **Panel (ESP32-S3 dev board, display+animation)**, **Clock (ESP32-C3, LED+voice)**, and **WizFi360 (RP2040 + WiFi, TCP communication)** — four branching paths.
 
 ---
 
@@ -29,6 +29,26 @@ Claude Buddy Flashing Tool main interface with 5 configuration steps: ① Select
 ![exe3](docs/exe3.png)
 
 Click the **Browse** button next to the code directory field, navigate to and select the `device/` folder. Once selected, a **✓ Valid** badge appears to the right. The folder contains `assets/` (voice resources) and `lib/` (libraries).
+
+---
+
+## Step 3a: Step ② — WizFi360 Hardware Selection (RP2040 + WiFi TCP)
+
+![chosee_wifi](docs/chosee_wifi.png)
+
+Select **WizFi360 (RP2040+WiFi)**: Based on the WizFi360-EVB-Pico dev board, communicates with PC via WiFi TCP (no Bluetooth needed). After selection, a WiFi configuration area appears below — enter your router's **SSID (WiFi name)** and **password**. These are automatically injected into the device during flashing.
+
+> WizFi360 uses RP2040 as the main controller and controls the WizFi360 WiFi module via AT commands. Communication mode auto-switches to "Ethernet (WiFi)".
+
+---
+
+## Step 3b: Step ③ — Select Ethernet (WiFi) Communication
+
+![chosee_wifi2](docs/chosee_wifi2.png)
+
+After selecting WizFi360, the device connection area's communication mode auto-switches to **Ethernet (WiFi)**. After flashing, the PC connects to the device via TCP (default port 57321) — no BLE Bluetooth pairing needed.
+
+> The PC auto-scans the LAN for a free IP and assigns a static IP to the device, ensuring the IP stays fixed across reboots.
 
 ---
 
@@ -132,7 +152,8 @@ Click **Preview Custom Character** to view the ghost character's multi-color pix
 The firmware dropdown auto-matches based on hardware selection:
 - **D-Shell (S3 official panel)** → `claude-buddy-dshell-esp32s3-v0.9.bin` (GT911 touch + LED strip firmware)
 - **Panel (S3 dev board)** → `claude-buddy-panel-waveshare-esp32s3-2inch-v0.9.bin` (CST816S touch firmware)
-- **Clock (C3)** → C3 firmware (no screen)
+- **Clock (C3)** → `claude-buddy-clock-esp32c3-v0.9.bin` (C3 no-screen firmware)
+- **WizFi360 (RP2040)** → `claude-buddy-clock-wizfi360-v0.9.uf2` (RP2040 drag-and-drop firmware)
 
 Firmware is stored in the system temp cache directory — no manual download needed.
 
@@ -146,7 +167,9 @@ Firmware is stored in the system temp cache directory — no manual download nee
 - **Flash Base MicroPython Firmware**: MUST check for brand-new blank chips (flashes the base OS)
 - **Clear Device Filesystem**: Check for first-time flashing (full format, irreversible); uncheck for subsequent upgrades
 
-Communication mode defaults to BLE (Bluetooth).
+Communication mode defaults to BLE (Bluetooth). When WizFi360 is selected, it auto-switches to "Ethernet (WiFi)".
+
+> **WizFi360 Note**: WizFi360 uses RP2040 — the GUI skips esptool for "Flash Base Firmware" (RP2040 ships with MicroPython pre-installed). To manually flash .uf2 firmware: hold **BOOTSEL** + plug USB → drag .uf2 to RPI-RP2 drive → auto-reboot.
 
 ---
 
@@ -154,7 +177,7 @@ Communication mode defaults to BLE (Bluetooth).
 
 ![exe17](docs/exe17.png)
 
-Click **Start Flashing**. Note the red notice on the right: for first-time flashing, press and hold the **BOOT button** while powering on, then click Start Flashing. The bottom log area shows real-time progress.
+Click **Start Flashing**. Note the red notice on the right: for first-time flashing, press and hold the **BOOT button** (ESP32) / **BOOTSEL button** (RP2040) while powering on, then click Start Flashing. The bottom log area shows real-time progress.
 
 ---
 
@@ -170,7 +193,7 @@ Progress bar shows green. Log displays `Erasing flash`. **Do NOT disconnect the 
 
 ![exe19](docs/exe19.png)
 
-Log shows 100% write complete, hash verification passed, firmware flashing done. Device is rebooting. When this line appears, **manually press the RST button** on the device to restart hardware.
+Log shows 100% write complete, hash verification passed, firmware flashing done. Device is rebooting. When this line appears, **manually press the RST button** on the device to restart hardware (WizFi360/RP2040 auto-reboots after .uf2 drag-and-drop — no manual reset needed).
 
 ---
 
@@ -187,6 +210,26 @@ After the device reboots, click the **Refresh** button in the COM port section t
 ![exe21](docs/exe21.png)
 
 Top progress bar fully green. Log shows each `assets/` PCM voice file verified ✅. Device restarts automatically at the end. Bottom-left shows flash complete and device BLE name (e.g. `Claude-Buddy-E522`). Three action buttons and 3-step pairing guide below.
+
+---
+
+## Step 22w: WiFi TCP Pairing — Enter Device IP
+
+![pair_wifi](docs/pair_wifi.png)
+
+After WizFi360 flashing completes, click the **Pair Device** button. The dialog auto-scans the LAN to find the device, or you can manually enter the device IP address (the device prints its IP via serial after boot). Click confirm — TCP connection is verified and pairing config is saved locally.
+
+> Unlike BLE pairing, WiFi pairing uses TCP connection verification — no Bluetooth scanning needed.
+
+---
+
+## Step 23w: Static IP Confirmation — Pairing Config Saved
+
+![static_ip](docs/static_ip.png)
+
+During flashing, the PC auto-scans the LAN for a free IP and injects it as a static IP on the device. After pairing completes, the status bar shows the device name and assigned IP address.
+
+> Static IP ensures the device IP stays the same across reboots — no re-pairing needed. To change the IP, re-flash the device.
 
 ---
 
@@ -227,14 +270,32 @@ Use this for daily debugging and troubleshooting.
 
 ---
 
+## Step 26: Start Bridge (All Forms)
+
+![gui_daemen](docs/gui_daemen.png)
+
+After flashing and pairing, click the **Start Bridge** button. The GUI's embedded daemon runs in the background, connecting to the device and receiving Claude Code Hook status data via TCP port 57320, forwarding it to the device in real time (5Hz refresh).
+
+- **BLE forms** (panel/dshell/clock): Bridge connects to device via BLE Bluetooth
+- **WiFi form** (wizfi360): Bridge connects to device via TCP (port 57321)
+- Status indicator shows current bridge state and active session count
+- Click **Stop Bridge** to disconnect at any time
+- Bridge auto-stops when closing the GUI window
+
+> After starting the bridge, execute any tool in Claude Code — the device will show corresponding light/voice/animation feedback.
+
+---
+
 ## Quick Reference
 
 | Scenario | Key Steps | Screenshots |
 |----------|-----------|-------------|
-| **First-time Clock Flash** | 1→2→3→4→5→6→7→8→16→17→18→19→20→21→22→23→24 | exe1~8, exe16~24 |
-| **First-time Panel Flash** | 1→2→3→9→10→(optional 11~14)→15→16→17→18→19→20→21→22→23→24 | exe1~3, exe9~24 |
+| **First-time Clock Flash** | 1→2→3→4→5→6→7→8→16→17→18→19→20→21→22→23→24→26 | exe1~8, exe16~24, gui_daemen |
+| **First-time Panel/D-Shell Flash** | 1→2→3→9→10→(optional 11~14)→15→16→17→18→19→20→21→22→23→24→26 | exe1~3, exe9~24, gui_daemen |
+| **First-time WizFi360 Flash** | 1→2→3→3a→3b→16→17→18→19→20→21→22w→23w→26 | exe1~3, chosee_wifi, chosee_wifi2, exe16~21, pair_wifi, static_ip, gui_daemen |
 | **Firmware Upgrade (Clock/Panel)** | 1→2→3→4/9→16(uncheck base firmware + clear)→17→18→19→20→21 | skip exe5~8 |
 | **Change Character Only (Panel)** | 1→2→3→9→10→16(parameters only)→17 | skip firmware flash |
 | **View Device Logs** | Launch tool → 24→Pair→25 | exe24~25 |
+| **Start Bridge (All Forms)** | Pairing complete → click "Start Bridge" → observe status | gui_daemen |
 
 > **Tip**: First-time flashing MUST check both "Flash Base MicroPython Firmware" and "Clear Device Filesystem". Subsequent upgrades should uncheck both and only upload application code.

@@ -266,7 +266,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
       <span class="scen-num">04</span>
       <div class="scen-icon">🤹</div>
       <div class="scen-title px">多项目并发管理</div>
-      <div class="scen-desc">同时跑多个 Claude Code 处理不同项目，面板版显示多 session 历史。v0.9.4 起，slot 字段稳定槽位映射，session 沉默重连后回到原位，历史不误清。v1.0.0 正式发布三形态：D-Shell 正式面板（GT911 触摸+彩虹灯带）、Panel 开发板、Clock 闹钟版。</div>
+      <div class="scen-desc">同时跑多个 Claude Code 处理不同项目，面板版显示多 session 历史。v0.9.4 起，slot 字段稳定槽位映射，session 沉默重连后回到原位，历史不误清。v1.0.0 正式发布三形态：D-Shell 正式面板（GT911 触摸+彩虹灯带）、Panel 开发板、Clock 闹钟版。v1.1.0 新增 WizFi360 WiFi 版（RP2040 + WiFi TCP），无需蓝牙即可通信。</div>
       <span class="scen-state px" style="border-color:var(--purple)">Multi-Session</span>
     </div>
   </div>
@@ -432,7 +432,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 <!-- ══ S9: HARDWARE ══ -->
 <section class="slide" id="s9">
   <div class="stl stag d1">Hardware Specs</div>
-  <h2 class="hl stag d2" style="font-size:clamp(18px,2.8vw,38px);text-align:center;margin-bottom:14px">三形态 <span class="cx">硬件规格</span></h2>
+  <h2 class="hl stag d2" style="font-size:clamp(18px,2.8vw,38px);text-align:center;margin-bottom:14px">四形态 <span class="cx">硬件规格</span></h2>
   <div class="g3 stag d3" style="max-width:1160px;align-items:start;gap:20px">
     <div style="background:rgba(255,255,255,.02);border:1px solid rgba(0,245,255,.22);border-radius:13px;padding:22px" onmouseover="this.style.boxShadow='0 0 20px rgba(0,245,255,.3)'" onmouseout="this.style.boxShadow=''">
       <div style="font:9px/1 'Courier New',monospace;letter-spacing:3px;color:var(--cyan);margin-bottom:10px">PANEL FORM · ESP32-S3</div>
@@ -494,7 +494,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <div class="metric"><div class="metric-n" style="color:var(--purple);text-shadow:var(--gpurple)">v6</div><div class="metric-l">协议版本</div></div>
     <div class="metric"><div class="metric-n" data-t="10" data-s=" 种">10 种</div><div class="metric-l">Hook 事件类型</div></div>
     <div class="metric"><div class="metric-n" style="color:var(--green);text-shadow:var(--ggreen)">+slot</div><div class="metric-l">v5→v6 新增字段</div></div>
-    <div class="metric"><div class="metric-n" data-t="3">3</div><div class="metric-l">硬件形态</div></div>
+    <div class="metric"><div class="metric-n" data-t="4">4</div><div class="metric-l">硬件形态</div></div>
   </div>
   <div class="stag d5" style="max-width:1160px;margin-top:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
     <div style="background:rgba(0,245,255,.04);border:1px solid rgba(0,245,255,.1);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--dim);line-height:1.6">
@@ -519,7 +519,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
       <span style="color:var(--purple);font-weight:600">+slot 字段</span> — 一个字段解决槽位漂移根因：session 有了稳定身份，设备端不再靠顺序猜位置。
     </div>
     <div style="background:rgba(139,92,246,.04);border:1px solid rgba(139,92,246,.1);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--dim);line-height:1.6">
-      <span style="color:var(--purple);font-weight:600">3 种硬件形态</span> — dshell 正式面板+触摸+彩虹灯带；panel 开发板屏幕+历史适合深度多任务；clock 灯光+语音适合放桌角瞥一眼。
+      <span style="color:var(--purple);font-weight:600">4 种硬件形态</span> — dshell 正式面板+触摸+彩虹灯带；panel 开发板屏幕+历史适合深度多任务；clock 灯光+语音适合放桌角瞥一眼；wizfi360 WiFi TCP 通信无需蓝牙。
     </div>
     <div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--dim);line-height:1.6">
       <span style="color:var(--green);font-weight:600">Daemon 634 行</span> — 核心逻辑精简，状态机清晰，二次开发或自定义协议门槛低。
@@ -532,6 +532,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     </div>
     <div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--dim);line-height:1.6">
       <span style="color:var(--green);font-weight:600">&lt;1s Daemon 启动</span> — 一条命令不到一秒就绪，不需要等待漫长初始化，随开随用。
+
+<div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,165,0,.22);border-radius:13px;padding:22px" onmouseover="this.style.boxShadow='0 0 20px rgba(255,165,0,.3)'" onmouseout="this.style.boxShadow=''">
+      <div style="font:9px/1 'Courier New',monospace;letter-spacing:3px;color:var(--orange);margin-bottom:10px">WIZFI360 FORM &middot; RP2040</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:var(--dim);line-height:1.6">
+        <div><span style="color:var(--text)">RP2040</span> 主控</div>
+        <div><span style="color:var(--text)">WiFi TCP</span> 通信</div>
+        <div><span style="color:var(--text)">WS2812&times;2</span> LED</div>
+        <div><span style="color:var(--text)">MAX98357A</span> 扬声器</div>
+        <div><span style="color:var(--text)">振动传感器</span> + 马达</div>
+        <div><span style="color:var(--text)">无需蓝牙</span></div>
+        <div><span style="color:var(--text)">USB 供电</span> 即插即用</div>
+        <div></div>
+      </div>
+    </div>
     </div>
   </div>
 </section>
@@ -562,6 +576,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
         <div class="ist" data-n="1"><div><div style="font-weight:600;color:var(--cyan);font-size:11px">安装 PC 依赖</div><div style="font-size:10px;color:var(--dim);margin-top:1px">pip install bleak websockets pyserial mpremote</div></div></div>
         <div class="ist" data-n="2"><div><div style="font-weight:600;color:var(--cyan);font-size:11px">生成 TTS 语音（clock 形态）</div><div style="font-size:10px;color:var(--dim);margin-top:1px">python scripts/gen_voice_assets.py</div></div></div>
         <div class="ist" data-n="3"><div><div style="font-weight:600;color:var(--cyan);font-size:11px">烧录固件到 ESP32</div><div style="font-size:10px;color:var(--dim);margin-top:1px">python scripts/flash_device.py --variant clock</div></div></div>
+        <div class="ist" data-n="3b"><div><div style="font-weight:600;color:var(--cyan);font-size:11px">烧录固件到 RP2040（WiFi 版）</div><div style="font-size:10px;color:var(--dim);margin-top:1px">python scripts/flash_device.py --variant wizfi360</div></div></div>
         <div class="ist" data-n="4"><div><div style="font-weight:600;color:var(--cyan);font-size:11px">BLE 配对 + 启动守护进程</div><div style="font-size:10px;color:var(--dim);margin-top:1px">python daemon/pair_device.py<br>python daemon/ble_daemon.py</div></div></div>
         <div class="ist" data-n="5"><div><div style="font-weight:600;color:var(--cyan);font-size:11px">注册 Hook + 验证</div><div style="font-size:10px;color:var(--dim);margin-top:1px">写入 settings.json · python daemon/smoke.py</div></div></div>
       </div>
@@ -816,6 +831,22 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <div class="card g">
       <div style="color:var(--green);font-size:13px;letter-spacing:2px;margin-bottom:8px">🔆 全局亮度</div>
       <div style="color:var(--dim);font-size:13px;line-height:1.7">LIGHT_BRIGHTNESS 1-100<br>LIGHT_CONNECT_BRIGHTNESS 独立<br>GUI 亮度滑块<br>test_worker.py 配置覆写测试</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s15b">
+  <div class="stl stag d1">v1.1.0 &middot; 2026-07-08</div>
+  <div class="hl stag d2" style="text-align:center">WizFi360 WiFi 版 + <span class="cx">第四硬件形态</span></div>
+  <div class="sep stag d2"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;width:100%;margin-top:12px" class="stag d3">
+    <div class="card">
+      <div style="color:var(--cyan);font-size:13px;letter-spacing:2px;margin-bottom:8px">&#x1F310; WizFi360 WiFi 版硬件</div>
+      <div style="color:var(--dim);font-size:13px;line-height:1.7">RP2040 + WizFi360 WiFi 模块<br>TCP 通信无需蓝牙<br>WS2812&times;2 双灯 + MAX98357A 扬声器<br>振动传感器 + 马达，USB 供电即插即用<br>静态 IP 分配 + 自动配对</div>
+    </div>
+    <div class="card g">
+      <div style="color:var(--green);font-size:13px;letter-spacing:2px;margin-bottom:8px">&#x1F4CB; 文档 + 工具更新</div>
+      <div style="color:var(--dim);font-size:13px;line-height:1.7">GUI 新增 WiFi SSID/密码输入框<br>启动桥接按钮（GUI 内一键运行 daemon）<br>烧录后自动获取 IP 并配对<br>全部文档更新为四种硬件形态<br>新增 firmware/README.md 库文件说明</div>
     </div>
   </div>
 </section>

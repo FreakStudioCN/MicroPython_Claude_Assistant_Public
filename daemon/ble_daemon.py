@@ -41,9 +41,9 @@ import time
 from typing import Optional
 
 try:
-    from .transport import BleTransport, TcpDeviceTransport
+    from .transport import BleTransport, TcpDeviceTransport, WifiTransport, Transport, _load_pairing_config
 except ImportError:  # 直接 `python daemon/ble_daemon.py` 跑时
-    from transport import BleTransport, TcpDeviceTransport
+    from transport import BleTransport, TcpDeviceTransport, WifiTransport, Transport, _load_pairing_config
 
 HOST = "127.0.0.1"
 # CLAUDE_BUDDY_PORT 让 e2e 测试用临时端口避开生产 daemon。生产默认 57320。
@@ -90,9 +90,11 @@ _dirty = False         # 全局 dirty 标志（pusher 用）
 _stub = False
 _force_offline = False  # --offline 标志：强制 device_online=False，覆盖 stub 的在线假设
 _tcp_device = False     # --tcp-device 标志：用 TcpDeviceTransport 替代 BLE
+_wifi_device = False    # --wifi-device 标志：用 WifiTransport 连 WizFi360 设备
+_wifi_ip = "192.168.1.6"  # --wifi-ip 设备 IP 地址
 
 # ── Transport ─────────────────────────────────────────────
-_transport: Optional[BleTransport] = None
+_transport: Optional[Transport] = None
 
 # ── 业务层全局 ────────────────────────────────────────────
 _lock = None
@@ -553,12 +555,18 @@ async def _handle_client(reader, writer):
 async def async_main():
     global _lock, _transport
     _lock = asyncio.Lock()
-    if _tcp_device:
+
+    # 按配对方式自动选 transport：device.json method > CLI 参数 > BLE 默认
+    pairing = _load_pairing_config()
+    if _wifi_device or pairing.get("method") == "wifi":
+        _transport = WifiTransport(device_ip=_wifi_ip or None)
+        print(f"[daemon] WiFi mode, target {_transport._device_ip}:{_transport._device_port}")
+    elif _tcp_device:
         _transport = TcpDeviceTransport()
     else:
         _transport = BleTransport()
     server = await asyncio.start_server(_handle_client, HOST, PORT)
-    print(f"[daemon] listening on {HOST}:{PORT}  stub={_stub}  tcp_device={_tcp_device}")
+    print(f"[daemon] listening on {HOST}:{PORT}  stub={_stub}  tcp_device={_tcp_device}  wifi_device={_wifi_device}")
     async with server:
         if _stub:
             await asyncio.gather(server.serve_forever(), _pusher_task())
@@ -581,7 +589,7 @@ def main() -> None:
     ``async_main()``，由本函数 ``asyncio.run`` 包起来。直接 ``python daemon/ble_daemon.py``
     跑也走这里。
     """
-    global _stub, _force_offline, _tcp_device
+    global _stub, _force_offline, _tcp_device, _wifi_device, _wifi_ip
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--stub", action="store_true",
@@ -590,16 +598,24 @@ def main() -> None:
                         help="强制模拟设备离线（覆盖 stub 在线假设），用于离线审批测试")
     parser.add_argument("--tcp-device", action="store_true",
                         help="用 TCP 57321 替代 BLE，配合 scripts/sim_device.py 使用")
+    parser.add_argument("--wifi-device", action="store_true",
+                        help="用 WiFi TCP 连 WizFi360 设备（PC 作为 TCP Client 连设备 IP:57321）")
+    parser.add_argument("--wifi-ip", type=str, default="192.168.1.6",
+                        help="WizFi360 设备的 IP 地址（配合 --wifi-device 使用，默认 192.168.1.6）")
     parser.add_argument("--log", type=str, default=None,
                         help="日志文件路径（默认：普通模式→logs/daemon.log，--tcp-device→scripts/sim_device/logs/daemon.log）")
     args = parser.parse_args()
     _stub = args.stub
     _force_offline = args.offline
     _tcp_device = args.tcp_device
+    _wifi_device = args.wifi_device
+    _wifi_ip = args.wifi_ip
 
     _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     if args.tcp_device:
         _default_log_dir = os.path.join(_ROOT, "scripts", "sim_device", "logs")
+    elif args.wifi_device:
+        _default_log_dir = os.path.join(_ROOT, "logs")
     else:
         _default_log_dir = os.path.join(_ROOT, "logs")
     os.makedirs(_default_log_dir, exist_ok=True)

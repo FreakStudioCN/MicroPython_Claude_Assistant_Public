@@ -6,11 +6,11 @@ Ever had this happen? Claude Code is running a long task — you're not sure if 
 
 **The Clock edition** is built for exactly this — a small hardware device on your desk that uses colored lights and voice announcements to tell you what Claude Code is doing, without you having to stare at the terminal.
 
-It works simply: the device connects to a daemon on your PC via BLE Bluetooth. Every time Claude Code runs a tool — reading a file, executing a command, searching code — the status is pushed to the device in real time. Blue glow means idle, cyan sweep means working, yellow slow blink means approval needed, green flash means task complete, red alternating means error. Each state change has a voice announcement synthesized by the Doubao TTS engine — pick from 200+ voices, adjust speed and pitch.
+It works simply: the device connects to a daemon on your PC via BLE Bluetooth (or WiFi TCP). Every time Claude Code runs a tool — reading a file, executing a command, searching code — the status is pushed to the device in real time. Blue glow means idle, cyan sweep means working, yellow slow blink means approval needed, green flash means task complete, red alternating means error. Each state change has a voice announcement synthesized by the Doubao TTS engine — pick from 200+ voices, adjust speed and pitch.
 
 What does this mean for you? It means you can walk away while Claude Code runs batch tasks. Grab coffee, hear "Task complete!" and know it's time to check results. Working on something else when yellow light blinks + "Please check your terminal" reminds you there's an approval waiting. Coding late at night with lights off? Voice announcements keep you informed without looking at the screen. It extends Claude Code's state from the screen into physical space — perceive with your peripheral vision and ears, not with mouse clicks.
 
-The Clock hardware is minimal: an ESP32-C3 driving two WS2812B LEDs and a MAX98357A speaker in a small enclosure. Just USB power. Flashing and configuration are done through a GUI tool in two steps. Swap voices anytime (200+ Doubao options). No management portal, no subscription, no cloud dependency — everything runs over Bluetooth on your local machine.
+The Clock hardware is minimal: an ESP32-C3 (or RP2040) driving two WS2812B LEDs and a MAX98357A speaker in a small enclosure. Just USB power. Flashing and configuration are done through a GUI tool in two steps. Swap voices anytime (200+ Doubao options). No management portal, no subscription, no cloud dependency — everything runs over Bluetooth or WiFi on your local machine.
 
 Multiple Claude Code windows? The device tracks all sessions and surfaces the most important one. It doesn't store your code, doesn't upload anything — it's just a faithful status indicator.
 
@@ -18,12 +18,13 @@ At its heart, it's a simple idea: most of the time you're coding, you don't need
 
 ---
 
-Real-time visualization of Claude Code tool execution status as an ESP32 desktop pet — BLE-pushed states translated into LED glow, voice announcements, and screen animations.
+Real-time visualization of Claude Code tool execution status as a desktop pet — BLE/WiFi-pushed states translated into LED glow, voice announcements, and screen animations.
 
-**Three hardware forms**:
+**Four hardware forms**:
 - **D-Shell Panel (ESP32-S3)**: 2.4-inch TFT screen + GT911 touch + LVGL animation + WS2812×8 rainbow LED strip + TTS voice, 8 preset characters, multi-session history (**official hardware**)
 - **Panel (ESP32-S3)**: 2.4-inch TFT screen + LVGL animation + TTS voice, 8 preset characters, multi-session history (Waveshare dev board)
 - **Clock (ESP32-C3)**: WS2812B dual LEDs + Doubao TTS voice, colors change with state
+- **WizFi360 (RP2040 + WiFi)**: WS2812B dual LEDs + Doubao TTS voice + vibration sensor/motor, WiFi TCP communication (no Bluetooth needed)
 
 **Customizable**: Panel characters (8 presets + custom), voice timbres (200+ Doubao options) — switch via `config.py`.
 
@@ -49,8 +50,9 @@ Real-time visualization of Claude Code tool execution status as an ESP32 desktop
 | **D-Shell** (D-Shell Panel) | ESP32-S3 | ST7789 2.4" + GT911 touch + LVGL + WS2812×8 + MAX98357A speaker | Character animation + touch + TTS voice + multi-session history + rainbow LED strip |
 | **Panel** (Status Display) | ESP32-S3 | ST7789 2.4" + CST816S touch + LVGL + MAX98357A speaker | Character animation + touch + TTS voice + multi-session history (Waveshare dev board) |
 | **Clock** (Alert Light) | ESP32-C3 | WS2812×2 + MAX98357A speaker | LED state + TTS voice |
+| **WizFi360** (WiFi Alert Light) | RP2040 + WizFi360 | WS2812×2 + MAX98357A speaker + vibration sensor/motor | LED state + TTS voice + WiFi TCP (no BLE) |
 
-All three forms share the same firmware code, differentiated by the `VARIANT` field in `config.py`.
+All four forms share the same firmware code, differentiated by the `VARIANT` field in `config.py`.
 
 ---
 
@@ -78,10 +80,10 @@ All three forms share the same firmware code, differentiated by the `VARIANT` fi
 
 **PC-side**:
 - Python 3.11+
-- Windows 10/11 (BLE support)
+- Windows 10/11 (BLE or WiFi support)
 
-**ESP32-side**:
-- ESP32 with MicroPython firmware ([Official Download](https://micropython.org/download/))
+**Device-side**:
+- ESP32 with MicroPython firmware ([Official Download](https://micropython.org/download/)), or RP2040 (WizFi360-EVB-Pico, ships with MicroPython)
 - USB data cable connected to PC
 
 **Optional customizations**:
@@ -96,25 +98,49 @@ All three forms share the same firmware code, differentiated by the `VARIANT` fi
 pip install -e .
 ```
 
+### CLI Flashing (Alternative)
+
+As an alternative to the GUI tool, you can flash via command line:
+
+```bash
+python scripts/flash_device.py --variant clock      # Clock edition (ESP32-C3)
+python scripts/flash_device.py --variant panel      # Panel edition (ESP32-S3)
+python scripts/flash_device.py --variant dshell     # D-Shell official panel edition
+python scripts/flash_device.py --variant wizfi360   # WizFi360 WiFi edition (RP2040 + WiFi TCP)
+```
+
+> **WizFi360 Note**: RP2040 ships with MicroPython pre-installed — no esptool base firmware flashing needed. To manually flash .uf2 firmware: hold **BOOTSEL button** + connect USB → drag `firmware/claude-buddy-clock-wizfi360-v0.9.uf2` to the RPI-RP2 drive → auto-reboot.
+
+### Device Pairing (CLI)
+
+```bash
+python daemon/pair_device.py   # BLE forms: Bluetooth scan; WiFi form: TCP scan
+```
+
+Pairing config is saved to `%APPDATA%\claude-buddy\device.json`. The daemon auto-connects on subsequent launches.
+
 ### One-Click GUI Flashing Tool
 
-`setup_tool` integrates firmware flashing, character selection, voice generation, BLE pairing — **all in one interface**.
+`setup_tool` integrates firmware flashing, character selection, voice generation, BLE/WiFi pairing — **all in one interface**.
 
 ![setup_tool GUI](docs/setuptool.png)
 
 Run `dist/Claude_Assistant_Setup.exe` (download from Releases page).
 
-**GUI Steps** (5-step main flow):
+**GUI Steps** (6-step main flow):
 
 ![Step1](docs/exe1.png) ![Step2](docs/exe2.png) ![Step3](docs/exe3.png) ![Step4](docs/exe4.png)
 
 1. **Select Code Directory**: Double-click EXE → Maximize window → Browse to `device/` directory
-2. **Select Hardware**: Clock (ESP32-C3 LED+Voice) / Panel (ESP32-S3 screen+animation), Panel offers 8 presets or custom characters
-3. **Connect Device + Configure**: USB connect ESP32, select COM port; first-time check "Flash base firmware" and "Clear filesystem"
+2. **Select Hardware**: Clock (ESP32-C3 LED+Voice) / Panel (ESP32-S3 screen+character) / D-Shell (official panel+LED strip) / WizFi360 (RP2040+WiFi), Panel/D-Shell offers 8 presets or custom characters
+3. **Connect Device + Configure**: USB connect device, select COM port; first-time check "Flash base firmware" and "Clear filesystem"; WizFi360 requires WiFi SSID/password input
 4. **Start Flashing**: Click button, progress bar shows real-time status (erase→flash→verify→reboot)
-5. **Pair Device**: After flashing, click "Pair Device" for BLE pairing, MAC address auto-saved
+5. **Pair Device**: After flashing, click "Pair Device" — BLE pairing for ESP32 forms, WiFi TCP pairing for WizFi360
+6. **Start Bridge**: Click "Start Bridge", GUI's embedded daemon connects to device and pushes Claude Code execution status in real time (all forms)
 
-> Full 25-step visual guide (Clock/Panel branching paths, Doubao TTS voice generation, custom character import) at **[setup_tool_guide_EN.md](setup_tool_guide_EN.md)** or **[setup_tool_guide.md](setup_tool_guide.md)**.
+![Bridge running](docs/gui_daemen.png)
+
+> Full visual guide (Clock/Panel/D-Shell/WizFi360 branching paths, Doubao TTS voice generation, custom character import, WiFi pairing, bridge startup) at **[setup_tool_guide_EN.md](setup_tool_guide_EN.md)** or **[setup_tool_guide.md](setup_tool_guide.md)**.
 >
 > GUI tool auto-scans COM ports, matches firmware files, checks dependencies — no need to manually run CLI steps.
 
@@ -147,7 +173,7 @@ Open `~/.claude/settings.json` (Windows: `C:\Users\<user>\.claude\settings.json`
 python daemon/ble_daemon.py
 ```
 
-Daemon auto-searches and connects to ESP32. On connection, device plays connect voice/animation.
+Daemon auto-searches and connects to device (BLE or WiFi TCP). On connection, device plays connect voice/animation.
 
 ### Verify
 
@@ -161,7 +187,7 @@ If smoke passes, run any tool in Claude Code (e.g. Read a file) — the device s
 
 ```
 Each session:
-  1. Power on ESP32 device (USB or battery)
+  1. Power on device (USB or battery)
   2. Start daemon on PC: python daemon/ble_daemon.py
   3. Open Claude Code, use normally
   4. Device automatically reflects Claude's working state
@@ -228,6 +254,8 @@ Re-flash: run setup_tool to re-flash.
 
 | Version | Date | Description |
 |---------|------|-------------|
+| v1.1.0 | 2026-07-08 | New WizFi360 WiFi form (RP2040 + WiFi TCP), static IP allocation, GUI WiFi config/pairing, full doc update |
+| v1.0.0 | 2026-06-23 | First formal release: new D-Shell Panel form (touch+LED strip), GUI 3-form selection, full doc update |
 | v0.12.0 | 2026-06-08 | Clock vibration sensor/motor + global brightness control |
 | v0.11.0 | 2026-06-07 | EXE cross-computer compatibility refactor + version system |
 | v0.10.1 | 2026-06-05 | Bilingual documentation + 25-step visual setup guide + GUI tool improvements |

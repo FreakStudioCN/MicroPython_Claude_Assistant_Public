@@ -129,6 +129,7 @@ DSHELL_BEEP_PIN = 5
 # ── WS2812 双灯（闹钟版）─────────────────────────────────────
 CLOCK_LED_PIN   = 21
 CLOCK_LED_COUNT = 2
+CLOCK_TIMER_ID  = 0   # machine.Timer ID（ESP32 硬件定时器）
 
 # ── 扬声器 MAX98357A（I2S，闹钟版）───────────────────────────
 CLOCK_SPK_LRC      = 9   # I2S 左右声道时钟
@@ -250,7 +251,7 @@ elif VARIANT == "panel":
     SPK_DIN    = PANEL_SPK_SD
     AMP_SD_PIN = PANEL_AMP_SD_PIN
     # SD 卡引脚已在 PANEL_SD_* 中定义
-else:  # clock
+else:  # clock / wizfi360（wizfi360 别名在下方 if 块末尾重设）
     SPK_BCLK   = CLOCK_SPK_BCLK
     SPK_LRC    = CLOCK_SPK_LRC
     SPK_DIN    = CLOCK_SPK_DIN
@@ -261,4 +262,41 @@ LOG_ENABLE  = True       # True = 写文件；False = 走串口
 LOG_STORAGE = "flash"    # "flash" | "sd"
 LOG_FILE    = "/log/run.log"
 LOG_LEVEL   = 20         # INFO=20, DEBUG=10
+
+# ── WizFi360 WiFi TCP 配置（VARIANT == "wizfi360" 时生效）────────
+#    此块独立于 BLE / ESP32 逻辑，新增不影响原有三种形态。
+if VARIANT == "wizfi360":
+    # ── WiFi 凭据（烧录时自动注入）──────────────────────────────
+    WIFI_SSID       = "CU_kM7v"         # 烧录时自动注入
+    WIFI_PASSWORD   = "a7tmyakw"        # 烧录时自动注入
+    WIFI_STATIC_IP   = ""               # 静态 IP（空 = DHCP）
+    WIFI_GATEWAY     = ""
+    WIFI_NETMASK     = "255.255.255.0"
+    # ── RP2040 UART → WizFi360 ──────────────────────────────────
+    WIFI_UART_PORT  = 1                 # RP2040 UART1
+    WIFI_UART_TX    = 4                 # GP4 → WizFi360 RX
+    WIFI_UART_RX    = 5                 # GP5 → WizFi360 TX
+    WIFI_UART_TXBUF = 1024
+    WIFI_UART_RXBUF = 8192
+    WIFI_RESET_PIN  = 20                # WizFi360 RST → RP2040 GP20
+    TCP_PORT        = 57321             # 设备端 TCP Server 端口
+    # ── WS2812 灯光 ──
+    CLOCK_LED_PIN   = 16
+    CLOCK_LED_COUNT = 2
+    CLOCK_TIMER_ID  = -1  # machine.Timer ID（RP2040 虚拟定时器）
+    # ── MAX98357A 扬声器（I2S）──
+    CLOCK_SPK_BCLK     = 11             # I2S 位时钟 → MAX98357A BCLK
+    CLOCK_SPK_LRC      = 12             # I2S 左右声道时钟 → MAX98357A LRC
+    CLOCK_SPK_DIN      = 13             # I2S 数据输入 → MAX98357A DIN
+    CLOCK_AMP_GAIN_PIN = 1              # 增益控制 → MAX98357A GAIN
+    CLOCK_AMP_SD_PIN   = 0              # 关断 / 静音控制 → MAX98357A SD
+    # ── 振动传感器与马达 ──
+    CLOCK_VIB_SENSOR_PIN = 18           # 振动传感器（外部中断触发）
+    CLOCK_VIB_MOTOR_PIN  = 17           # 振动马达（输出）
+    # ── 引脚别名（必须在 CLOCK_* 覆盖之后，否则拿到 ESP32 默认值）─
+    SPK_BCLK   = CLOCK_SPK_BCLK
+    SPK_LRC    = CLOCK_SPK_LRC
+    SPK_DIN    = CLOCK_SPK_DIN
+    AMP_SD_PIN = CLOCK_AMP_SD_PIN
+    DEVICE_NAME     = "Claude-Buddy-WiFi-01"
 

@@ -121,7 +121,7 @@ uv sync --frozen 2>&1
 
 ---
 
-## Phase 3: BLE 配对
+## Phase 3: 设备配对
 
 **先提醒**:「macOS 第一次会弹蓝牙权限给终端 app，请点允许。」
 
@@ -132,7 +132,10 @@ cd "$HOME/.claude-buddy"
 uv run claude-buddy-pair
 ```
 
-pair_device.py 会扫蓝牙、列设备、让用户选、写 `device.json`（含 `paired_mac`）。退出码 0 表示配对成功。
+pair_device.py 会扫蓝牙 / WiFi 子网、列设备、让用户选、写 `device.json`（含 `paired_mac` 或 `paired_ip`）。退出码 0 表示配对成功。
+
+- **BLE 形态**（panel/dshell/clock）：蓝牙扫描，写入 `paired_mac`
+- **WiFi 形态**（wizfi360）：TCP 子网扫描（端口 57321），写入 `paired_ip`
 
 验证：
 
@@ -143,7 +146,7 @@ cat "$HOME/.config/claude-buddy/device.json" 2>/dev/null || \
 cat "$APPDATA/claude-buddy/device.json" 2>/dev/null
 ```
 
-字段必须含 `paired_mac`。没有就让用户重跑 `claude-buddy-pair`。
+字段必须含 `paired_mac`（BLE）或 `paired_ip`（WiFi）。没有就让用户重跑 `claude-buddy-pair`。
 
 ---
 
@@ -217,9 +220,13 @@ netstat -an | grep 57320 || ss -an | grep 57320 || lsof -i :57320
 # 2. daemon log 看错误
 cat /tmp/cb-daemon.log | tail -50
 
-# 3. BLE 连上了吗
+# 3. BLE / WiFi 连上了吗
 grep -i "connected" /tmp/cb-daemon.log
 grep -i "error\|failed" /tmp/cb-daemon.log
+
+# 4. WiFi 设备 IP 对吗（仅 WizFi360）
+grep -i "paired_ip" "$HOME/.config/claude-buddy/device.json" 2>/dev/null || \
+grep -i "paired_ip" "$APPDATA/claude-buddy/device.json" 2>/dev/null
 ```
 
 诊断决策：
@@ -227,9 +234,10 @@ grep -i "error\|failed" /tmp/cb-daemon.log
 | 现象 | 原因 | 处理 |
 |---|---|---|
 | daemon 没在 57320 监听 | daemon 起不来 | 看 /tmp/cb-daemon.log 找 traceback，让用户贴给客服 |
-| daemon 起来了，log 没 "connected" | 设备没开 / 距离远 / 配对错 | 让用户检查设备电源 + 拉近距离；不行重跑 Phase 3 |
+| daemon 起来了，log 没 "connected" | 设备没开 / 距离远 / 配对错（BLE）/ WiFi 不在同一子网（WizFi360） | 让用户检查设备电源 + 拉近距离（BLE）/ 确认同一 WiFi（WizFi360）；不行重跑 Phase 3 |
 | log 有 "connected" 但桌宠不动 | 固件问题 | 设备断电再上电；不行联系客服 |
-| `os: Linux` (含 WSL2) | BLE 不支持 | 退场 |
+| WizFi360 设备 log 有 WiFi 连接错误 | WiFi 凭据错误 / 信号弱 | 检查 SSID 密码是否正确；确认路由器 2.4G 频段开启 |
+| `os: Linux` (含 WSL2) + BLE 形态 | BLE 不支持 | 退场（WiFi 形态 WizFi360 不受此限制） |
 
 ---
 

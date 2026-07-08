@@ -1,3 +1,9 @@
+# main.py —— MicroPython 设备入口（所有形态共用）
+#
+# panel / dshell : 屏幕 + BLE
+# clock          : 灯光 + 语音 + 振动 + BLE
+# wizfi360       : 灯光 + 语音 + 振动 + WiFi TCP
+
 try:
     import uasyncio as asyncio
 except ImportError:
@@ -46,6 +52,28 @@ async def ble_recv_task():
         _log.info("disconnected")
 
 
+async def wifi_recv_task():
+    while True:
+        _log.info("waiting for PC connection...")
+        await _transport.connect()
+        await _renderer.on_connect()
+        _log.info("connected")
+        try:
+            while _transport.connected():
+                lid, line = await _transport.recv_line()
+                msg = p.parse(line)
+                if isinstance(msg, dict) and "cmd" in msg:
+                    _log.info("cmd: %s", msg["cmd"])
+                    name = getattr(cfg, "DEVICE_NAME", cfg.BLE_NAME)
+                    await _transport.send(p.build_ack(msg["cmd"], ok=True, name=name), link_id=lid)
+                elif msg is not None:
+                    _msg_queue.put_nowait(msg)
+        except OSError:
+            pass
+        await _renderer.on_disconnect()
+        _log.info("disconnected")
+
+
 async def render_task():
     while True:
         msg = await _msg_queue.get()
@@ -86,11 +114,16 @@ async def _main():
                 import json as ujson
             user_cfg = ujson.load(f)
             cfg.LOG_STORAGE = user_cfg.get("LOG_STORAGE", cfg.LOG_STORAGE)
-            _log.info("user config loaded: LOG_STORAGE=%s", cfg.LOG_STORAGE)
+            if cfg.VARIANT in ("clock", "wizfi360"):
+                cfg.LIGHT_BRIGHTNESS = user_cfg.get("LIGHT_BRIGHTNESS", cfg.LIGHT_BRIGHTNESS)
+                cfg.VIB_SENSOR_ENABLE = user_cfg.get("VIB_SENSOR_ENABLE", cfg.VIB_SENSOR_ENABLE)
+                cfg.VIB_MOTOR_ENABLE = user_cfg.get("VIB_MOTOR_ENABLE", cfg.VIB_MOTOR_ENABLE)
+            _log.info("user config loaded")
     except OSError:
         _log.info("no user config, using defaults")
 
-    if cfg.VARIANT == "clock":
+    # ── 渲染器 ──────────────────────────────────────────────
+    if cfg.VARIANT in ("clock", "wizfi360"):
         from light_renderer import LightRenderer
         _renderer = LightRenderer()
     else:
@@ -101,13 +134,37 @@ async def _main():
     gc.collect()
     _log.info("after renderer: free=%d alloc=%d", gc.mem_free(), gc.mem_alloc())
 
-    from transport import BleTransport
-    _transport = BleTransport()
-    gc.collect()
-    _log.info("after BLE: free=%d alloc=%d", gc.mem_free(), gc.mem_alloc())
+    # ── 传输层 ──────────────────────────────────────────────
+    if cfg.VARIANT == "wizfi360":
+        from machine import UART, Pin
+        wifi_uart = UART(
+            cfg.WIFI_UART_PORT,
+            115200,
+            tx=Pin(cfg.WIFI_UART_TX),
+            rx=Pin(cfg.WIFI_UART_RX),
+            txbuf=cfg.WIFI_UART_TXBUF,
+            rxbuf=cfg.WIFI_UART_RXBUF,
+        )
+        _log.info("UART%d tx=GP%d rx=GP%d",
+                  cfg.WIFI_UART_PORT, cfg.WIFI_UART_TX, cfg.WIFI_UART_RX)
 
-    _msg_queue = Queue()
-    await asyncio.gather(ble_recv_task(), render_task())
+        from transport import WifiTransport
+        _transport = WifiTransport(wifi_uart, cfg.WIFI_SSID, cfg.WIFI_PASSWORD,
+                                   reset_pin=cfg.WIFI_RESET_PIN)
+        gc.collect()
+        _log.info("after transport: free=%d alloc=%d", gc.mem_free(), gc.mem_alloc())
+
+        _msg_queue = Queue()
+        await asyncio.gather(wifi_recv_task(), render_task())
+    else:
+        from transport import BleTransport
+        _transport = BleTransport()
+        gc.collect()
+        _log.info("after BLE: free=%d alloc=%d", gc.mem_free(), gc.mem_alloc())
+
+        _msg_queue = Queue()
+        await asyncio.gather(ble_recv_task(), render_task())
 
 
-asyncio.run(_main())
+if __name__ == "__main__":
+    asyncio.run(_main())

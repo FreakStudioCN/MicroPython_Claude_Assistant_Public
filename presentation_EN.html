@@ -432,7 +432,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 <!-- ══ S9: HARDWARE ══ -->
 <section class="slide" id="s9">
   <div class="stl stag d1">Hardware Specs</div>
-  <h2 class="hl stag d2" style="font-size:clamp(18px,2.8vw,38px);text-align:center;margin-bottom:14px">Three Forms <span class="cx">Hardware Specs</span></h2>
+  <h2 class="hl stag d2" style="font-size:clamp(18px,2.8vw,38px);text-align:center;margin-bottom:14px">Four Forms <span class="cx">Hardware Specs</span></h2>
   <div class="g3 stag d3" style="max-width:1160px;align-items:start;gap:20px">
     <div style="background:rgba(255,255,255,.02);border:1px solid rgba(0,245,255,.22);border-radius:13px;padding:22px" onmouseover="this.style.boxShadow='0 0 20px rgba(0,245,255,.3)'" onmouseout="this.style.boxShadow=''">
       <div style="font:9px/1 'Courier New',monospace;letter-spacing:3px;color:var(--cyan);margin-bottom:10px">PANEL FORM · ESP32-S3</div>
@@ -480,6 +480,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   </div>
 </section>
 
+
+<div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,165,0,.22);border-radius:13px;padding:22px" onmouseover="this.style.boxShadow='0 0 20px rgba(255,165,0,.3)'" onmouseout="this.style.boxShadow=''">
+      <div style="font:9px/1 'Courier New',monospace;letter-spacing:3px;color:var(--orange);margin-bottom:10px">WIZFI360 FORM &middot; RP2040</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:var(--dim);line-height:1.6">
+        <div><span style="color:var(--text)">RP2040</span> MCU</div>
+        <div><span style="color:var(--text)">WiFi TCP</span> Transport</div>
+        <div><span style="color:var(--text)">WS2812&times;2</span> LEDs</div>
+        <div><span style="color:var(--text)">MAX98357A</span> Speaker</div>
+        <div><span style="color:var(--text)">Vibration Sensor</span> + Motor</div>
+        <div><span style="color:var(--text)">No Bluetooth</span> Needed</div>
+        <div><span style="color:var(--text)">USB Powered</span></div>
+        <div></div>
+      </div>
+    </div>
 <!-- ══ S10: METRICS ══ -->
 <section class="slide" id="s10">
   <div class="stl stag d1">Key Metrics</div>
@@ -494,7 +508,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <div class="metric"><div class="metric-n" style="color:var(--purple);text-shadow:var(--gpurple)">v6</div><div class="metric-l">Protocol Version</div></div>
     <div class="metric"><div class="metric-n" data-t="10" data-s="">10</div><div class="metric-l">Hook EventsTypes</div></div>
     <div class="metric"><div class="metric-n" style="color:var(--green);text-shadow:var(--ggreen)">+slot</div><div class="metric-l">v5→v6 New Field</div></div>
-    <div class="metric"><div class="metric-n" data-t="3">3</div><div class="metric-l">Hardware Forms</div></div>
+    <div class="metric"><div class="metric-n" data-t="4">4</div><div class="metric-l">Hardware Forms</div></div>
   </div>
   <div class="stag d5" style="max-width:1160px;margin-top:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
     <div style="background:rgba(0,245,255,.04);border:1px solid rgba(0,245,255,.1);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--dim);line-height:1.6">
@@ -519,7 +533,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
       <span style="color:var(--purple);font-weight:600">+slot Field</span> — Solves slot drift at its root: stable session identity, no more guess-by-order.
     </div>
     <div style="background:rgba(139,92,246,.04);border:1px solid rgba(139,92,246,.1);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--dim);line-height:1.6">
-      <span style="color:var(--purple);font-weight:600">3 Hardware Forms</span> — D-Shell official panel (screen+touch+LED strip); Panel dev board (screen+history) for deep multitasking; Clock (LED+voice) for a glance.
+      <span style="color:var(--purple);font-weight:600">4 Hardware Forms</span> — D-Shell official panel (screen+touch+LED strip); Panel dev board (screen+history) for deep multitasking; Clock (LED+voice) for a glance; WizFi360 (WiFi TCP) no Bluetooth needed.
     </div>
     <div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.1);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--dim);line-height:1.6">
       <span style="color:var(--green);font-weight:600">Daemon 634 lines</span> — Clean state machine, easy to extend or customize the protocol.
@@ -562,6 +576,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
         <div class="ist" data-n="1"><div><div style="font-weight:600;color:var(--cyan);font-size:11px">Install PC deps</div><div style="font-size:10px;color:var(--dim);margin-top:1px">pip install bleak websockets pyserial mpremote</div></div></div>
         <div class="ist" data-n="2"><div><div style="font-weight:600;color:var(--cyan);font-size:11px">Generate TTS voice (Clock edition)</div><div style="font-size:10px;color:var(--dim);margin-top:1px">python scripts/gen_voice_assets.py</div></div></div>
         <div class="ist" data-n="3"><div><div style="font-weight:600;color:var(--cyan);font-size:11px">Flash firmware to ESP32</div><div style="font-size:10px;color:var(--dim);margin-top:1px">python scripts/flash_device.py --variant clock</div></div></div>
+        <div class="ist" data-n="3b"><div><div style="font-weight:600;color:var(--cyan);font-size:11px">Flash to RP2040 (WiFi Edition)</div><div style="font-size:10px;color:var(--dim);margin-top:1px">python scripts/flash_device.py --variant wizfi360</div></div></div>
         <div class="ist" data-n="4"><div><div style="font-weight:600;color:var(--cyan);font-size:11px">BLE Pair + Start PC Daemon</div><div style="font-size:10px;color:var(--dim);margin-top:1px">python daemon/pair_device.py<br>python daemon/ble_daemon.py</div></div></div>
         <div class="ist" data-n="5"><div><div style="font-weight:600;color:var(--cyan);font-size:11px">Register Hook + Verify</div><div style="font-size:10px;color:var(--dim);margin-top:1px">Write settings.json · python daemon/smoke.py</div></div></div>
       </div>
@@ -816,6 +831,38 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <div class="card g">
       <div style="color:var(--green);font-size:13px;letter-spacing:2px;margin-bottom:8px">🔆 Global Brightness</div>
       <div style="color:var(--dim);font-size:13px;line-height:1.7">LIGHT_BRIGHTNESS 1-100<br>LIGHT_CONNECT_BRIGHTNESS separate<br>GUI brightness slider<br>test_worker.py config override tests</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s15b">
+  <div class="stl stag d1">v1.1.0 &middot; 2026-07-08</div>
+  <div class="hl stag d2" style="text-align:center">WizFi360 WiFi Edition + <span class="cx">Fourth Form</span></div>
+  <div class="sep stag d2"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;width:100%;margin-top:12px" class="stag d3">
+    <div class="card">
+      <div style="color:var(--cyan);font-size:13px;letter-spacing:2px;margin-bottom:8px">&#x1F310; WizFi360 WiFi Hardware</div>
+      <div style="color:var(--dim);font-size:13px;line-height:1.7">RP2040 + WizFi360 WiFi Module<br>TCP communication, no Bluetooth required<br>WS2812&times;2 LEDs + MAX98357A Speaker<br>Vibration Sensor + Motor, USB Powered<br>Static IP allocation + Auto-pairing</div>
+    </div>
+    <div class="card g">
+      <div style="color:var(--green);font-size:13px;letter-spacing:2px;margin-bottom:8px">&#x1F4CB; Docs + Tools</div>
+      <div style="color:var(--dim);font-size:13px;line-height:1.7">GUI: WiFi SSID/password input fields<br>Bridge button (one-click daemon in GUI)<br>Auto IP capture &amp; pairing after flash<br>All docs updated for four hardware forms<br>New firmware/README.md with library docs</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s15b">
+  <div class="stl stag d1">v1.1.0 &middot; 2026-07-08</div>
+  <div class="hl stag d2" style="text-align:center">WizFi360 WiFi Edition + <span class="cx">Fourth Form</span></div>
+  <div class="sep stag d2"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;width:100%;margin-top:12px" class="stag d3">
+    <div class="card">
+      <div style="color:var(--cyan);font-size:13px;letter-spacing:2px;margin-bottom:8px">&#x1F310; WizFi360 WiFi Hardware</div>
+      <div style="color:var(--dim);font-size:13px;line-height:1.7">RP2040 + WizFi360 WiFi Module<br>TCP communication, no Bluetooth required<br>WS2812&times;2 LEDs + MAX98357A Speaker<br>Vibration Sensor + Motor, USB Powered<br>Static IP allocation + Auto-pairing</div>
+    </div>
+    <div class="card g">
+      <div style="color:var(--green);font-size:13px;letter-spacing:2px;margin-bottom:8px">&#x1F4CB; Docs + Tools</div>
+      <div style="color:var(--dim);font-size:13px;line-height:1.7">GUI: WiFi SSID/password input fields<br>Bridge button (one-click daemon in GUI)<br>Auto IP capture &amp; pairing after flash<br>All docs updated for four hardware forms<br>New firmware/README.md with library docs</div>
     </div>
   </div>
 </section>

@@ -120,7 +120,7 @@ Error handling:
 
 ---
 
-## Phase 3: BLE Pairing
+## Phase 3: Device Pairing
 
 **Reminder**: "macOS will prompt for Bluetooth permission for the terminal app — please allow it."
 
@@ -131,7 +131,10 @@ cd "$HOME/.claude-buddy"
 uv run claude-buddy-pair
 ```
 
-`pair_device.py` scans Bluetooth, lists devices, lets the user choose, writes `device.json` (with `paired_mac`). Exit code 0 means pairing succeeded.
+`pair_device.py` scans Bluetooth / WiFi subnet, lists devices, lets the user choose, writes `device.json` (with `paired_mac` or `paired_ip`). Exit code 0 means pairing succeeded.
+
+- **BLE forms** (panel/dshell/clock): Bluetooth scan, writes `paired_mac`
+- **WiFi form** (wizfi360): TCP subnet scan (port 57321), writes `paired_ip`
 
 Verify:
 
@@ -142,7 +145,7 @@ cat "$HOME/.config/claude-buddy/device.json" 2>/dev/null || \
 cat "$APPDATA/claude-buddy/device.json" 2>/dev/null
 ```
 
-Must contain `paired_mac`. If missing, ask the user to re-run `claude-buddy-pair`.
+Must contain `paired_mac` (BLE) or `paired_ip` (WiFi). If missing, ask the user to re-run `claude-buddy-pair`.
 
 ---
 
@@ -216,9 +219,13 @@ netstat -an | grep 57320 || ss -an | grep 57320 || lsof -i :57320
 # 2. Check daemon log for errors
 cat /tmp/cb-daemon.log | tail -50
 
-# 3. Is BLE connected?
+# 3. Is BLE / WiFi connected?
 grep -i "connected" /tmp/cb-daemon.log
 grep -i "error\|failed" /tmp/cb-daemon.log
+
+# 4. WiFi device IP correct? (WizFi360 only)
+grep -i "paired_ip" "$HOME/.config/claude-buddy/device.json" 2>/dev/null || \
+grep -i "paired_ip" "$APPDATA/claude-buddy/device.json" 2>/dev/null
 ```
 
 Diagnostic decisions:
@@ -226,9 +233,10 @@ Diagnostic decisions:
 | Symptom | Cause | Action |
 |---------|-------|--------|
 | daemon not listening on 57320 | daemon failed to start | Check /tmp/cb-daemon.log for traceback, ask user to report to support |
-| daemon running, log has no "connected" | device off / too far / wrong pairing | Ask user to check device power + move closer; if still failing, retry Phase 3 |
+| daemon running, log has no "connected" | device off / too far / wrong pairing (BLE) / WiFi not on same subnet (WizFi360) | Ask user to check device power + move closer (BLE) / confirm same WiFi network (WizFi360); if still failing, retry Phase 3 |
 | log has "connected" but pet doesn't move | firmware issue | Power cycle the device; if still failing, contact support |
-| `os: Linux` (including WSL2) | BLE not supported | Exit |
+| WizFi360 log shows WiFi connection error | Wrong WiFi credentials / weak signal | Check SSID/password; confirm router 2.4GHz band is enabled |
+| `os: Linux` (including WSL2) + BLE form | BLE not supported | Exit (WiFi form WizFi360 not affected) |
 
 ---
 

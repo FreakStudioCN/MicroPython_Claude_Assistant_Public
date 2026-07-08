@@ -7,10 +7,18 @@
 import asyncio
 import json
 import os
+import re
 import sys
 import time
 from pathlib import Path
 from typing import Callable, Optional
+
+# 清理孤立 surrogate 字符（U+D800–U+DFFF），这些不是合法 UTF-8
+_SURROGATE_RE = re.compile(r'[\ud800-\udfff]')
+
+
+def _safe_encode(s: str) -> bytes:
+    return _SURROGATE_RE.sub('?', s).encode()
 
 
 class Transport:
@@ -88,7 +96,7 @@ class BleTransport(Transport):
         await self._connect_loop()
 
     async def send(self, payload: dict):
-        data = (json.dumps(payload) + "\n").encode()
+        data = _safe_encode(json.dumps(payload) + "\n")
         print(f"[send] t={time.time():.3f} {payload} ({len(data)}B)")
         async with self._send_lock:
             for i in range(0, len(data), 20):
@@ -222,7 +230,7 @@ class TcpDeviceTransport(Transport):
     async def send(self, payload: dict):
         if self._writer is None:
             return
-        line = (json.dumps(payload, ensure_ascii=False) + "\n").encode()
+        line = _safe_encode(json.dumps(payload, ensure_ascii=False) + "\n")
         self._writer.write(line)
         await self._writer.drain()
 
@@ -233,13 +241,81 @@ class TcpDeviceTransport(Transport):
         return self.connected()
 
 
-# ── WiFi 实现（预留） ─────────────────────────────────────────
+# ── WiFi 实现（TCP Client → 设备 TCP Server） ────────────────
+
+WIFI_DEVICE_PORT = 57321
+
 
 class WifiTransport(Transport):
-    """TCP socket 传输（未实现）。"""
-    async def start(self, on_recv, on_connect, on_disconnect): raise NotImplementedError
-    async def send(self, payload: dict): raise NotImplementedError
-    def connected(self) -> bool: raise NotImplementedError
+    """PC 端 WiFi TCP Client — 主动连接 WizFi360 设备的 TCP Server。
+
+    与 BleTransport 的连接方向一致：PC 主动找设备、连设备。
+    优先从 device.json 读取配对 IP/端口，其次用构造参数，最后用默认值。
+    """
+
+    def __init__(self, device_ip: str = None, device_port: int = None):
+        config = _load_pairing_config()
+        self._device_ip = device_ip or config.get("paired_ip") or "192.168.1.6"
+        self._device_port = device_port or config.get("paired_port") or WIFI_DEVICE_PORT
+        self._reader: Optional[asyncio.StreamReader] = None
+        self._writer: Optional[asyncio.StreamWriter] = None
+        self._connected = False
+        self._on_recv: Optional[Callable] = None
+        self._on_connect: Optional[Callable] = None
+        self._on_disconnect: Optional[Callable] = None
+
+    async def start(self, on_recv, on_connect, on_disconnect):
+        self._on_recv = on_recv
+        self._on_connect = on_connect
+        self._on_disconnect = on_disconnect
+        await self._connect_loop()
+
+    async def _connect_loop(self):
+        while True:
+            if self._connected:
+                await asyncio.sleep(1)
+                continue
+            try:
+                print(f"[wifi] connecting to {self._device_ip}:{self._device_port} ...")
+                self._reader, self._writer = await asyncio.open_connection(
+                    self._device_ip, self._device_port)
+                self._connected = True
+                print(f"[wifi] connected to {self._device_ip}:{self._device_port}")
+                if self._on_connect:
+                    self._on_connect()
+                while True:
+                    line = await self._reader.readline()
+                    if not line:
+                        break
+                    line_str = line.decode(errors="ignore").strip()
+                    if line_str and self._on_recv:
+                        try:
+                            msg = json.loads(line_str)
+                            self._on_recv(msg)
+                        except Exception:
+                            pass
+            except Exception as e:
+                print(f"[wifi] connect failed: {e}")
+            finally:
+                self._connected = False
+                self._writer = None
+                self._reader = None
+                if self._on_disconnect:
+                    self._on_disconnect()
+                await asyncio.sleep(3)
+
+    async def send(self, payload: dict):
+        if self._writer is None:
+            return
+        line = _safe_encode(json.dumps(payload, ensure_ascii=False) + "\n")
+        self._writer.write(line)
+        await self._writer.drain()
+
+    def connected(self) -> bool:
+        return self._connected
+
+    def device_online(self) -> bool:
+        return self.connected()
 
 
 # ── 串口实现（预留） ─────────────────────────────────────────
